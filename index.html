@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>Task Manager</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Product+Sans:wght@400;500;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Product+Sans:wght@400;500;600;700&display=swap');
         
         * {
             margin: 0;
@@ -14,31 +14,54 @@
             -webkit-tap-highlight-color: transparent;
         }
         
-        :root {
-            --bg-primary: #0a0a0f;
-            --bg-secondary: #13131a;
-            --glass-bg: rgba(25, 25, 35, 0.7);
-            --glass-border: rgba(255, 255, 255, 0.1);
-            --accent: #6366f1;
-            --accent-hover: #4f46e5;
-            --text-primary: #ffffff;
-            --text-secondary: #a1a1aa;
+        :root[data-theme="light"] {
+            --bg-primary: #f0f9ff;
+            --bg-secondary: #e0f2fe;
+            --glass-bg: rgba(255, 255, 255, 0.6);
+            --glass-border: rgba(96, 165, 250, 0.2);
+            --accent: #0ea5e9;
+            --accent-hover: #0284c7;
+            --accent-secondary: #10b981;
+            --text-primary: #0f172a;
+            --text-secondary: #64748b;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --shadow: rgba(14, 165, 233, 0.1);
+            --card-bg: rgba(255, 255, 255, 0.8);
+            --card-border: rgba(96, 165, 250, 0.3);
+        }
+        
+        :root[data-theme="dark"] {
+            --bg-primary: #0a0a14;
+            --bg-secondary: #13131f;
+            --glass-bg: rgba(20, 20, 35, 0.7);
+            --glass-border: rgba(139, 92, 246, 0.2);
+            --accent: #8b5cf6;
+            --accent-hover: #7c3aed;
+            --accent-secondary: #6366f1;
+            --text-primary: #f1f5f9;
+            --text-secondary: #94a3b8;
             --success: #22c55e;
             --warning: #f59e0b;
             --danger: #ef4444;
+            --shadow: rgba(139, 92, 246, 0.2);
+            --card-bg: rgba(30, 30, 50, 0.8);
+            --card-border: rgba(139, 92, 246, 0.3);
         }
         
         body {
             font-family: 'Product Sans', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: linear-gradient(135deg, #0a0a0f 0%, #1a1a2e 100%);
+            background: var(--bg-primary);
             color: var(--text-primary);
             min-height: 100vh;
-            padding: 20px 16px;
+            padding: 20px 16px 140px;
             overflow-x: hidden;
             position: relative;
+            transition: background 0.3s ease, color 0.3s ease;
         }
         
-        /* Animated background */
+        /* Animated gradient background */
         body::before {
             content: '';
             position: fixed;
@@ -46,33 +69,51 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: radial-gradient(circle at 20% 50%, rgba(99, 102, 241, 0.1) 0%, transparent 50%),
-                        radial-gradient(circle at 80% 80%, rgba(168, 85, 247, 0.1) 0%, transparent 50%);
-            animation: pulse 15s ease-in-out infinite;
-            pointer-events: none;
             z-index: 0;
+            pointer-events: none;
+            opacity: 0.6;
         }
         
-        @keyframes pulse {
+        body[data-theme="light"]::before {
+            background: 
+                radial-gradient(circle at 20% 20%, rgba(14, 165, 233, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(16, 185, 129, 0.15) 0%, transparent 50%);
+            animation: pulseLight 20s ease-in-out infinite;
+        }
+        
+        body[data-theme="dark"]::before {
+            background: 
+                radial-gradient(circle at 20% 20%, rgba(139, 92, 246, 0.2) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(99, 102, 241, 0.2) 0%, transparent 50%);
+            animation: pulseDark 20s ease-in-out infinite;
+        }
+        
+        @keyframes pulseLight {
+            0%, 100% { opacity: 0.4; }
+            50% { opacity: 0.7; }
+        }
+        
+        @keyframes pulseDark {
             0%, 100% { opacity: 0.5; }
-            50% { opacity: 1; }
+            50% { opacity: 0.8; }
         }
         
         .container {
             position: relative;
             z-index: 1;
-            max-width: 600px;
+            max-width: 680px;
             margin: 0 auto;
         }
         
         /* Glass effect */
         .glass-container {
             background: var(--glass-bg);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
+            backdrop-filter: blur(30px);
+            -webkit-backdrop-filter: blur(30px);
             border: 1px solid var(--glass-border);
             border-radius: 24px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 8px 32px var(--shadow);
+            transition: all 0.3s ease;
         }
         
         /* Header */
@@ -85,18 +126,23 @@
         }
         
         .header h1 {
-            font-size: 28px;
+            font-size: 32px;
             font-weight: 700;
-            background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+            background: linear-gradient(135deg, var(--accent) 0%, var(--accent-secondary) 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
         }
         
-        .settings-btn {
-            width: 44px;
-            height: 44px;
-            border-radius: 50%;
+        .header-actions {
+            display: flex;
+            gap: 12px;
+        }
+        
+        .icon-btn {
+            width: 48px;
+            height: 48px;
+            border-radius: 16px;
             background: var(--glass-bg);
             backdrop-filter: blur(20px);
             border: 1px solid var(--glass-border);
@@ -106,67 +152,209 @@
             align-items: center;
             justify-content: center;
             transition: all 0.3s ease;
-            font-size: 20px;
+            font-size: 22px;
         }
         
-        .settings-btn:active {
+        .icon-btn:active {
             transform: scale(0.95);
             background: var(--accent);
             border-color: var(--accent);
+            color: white;
         }
         
-        /* Timeline indicator */
-        .timeline-indicator {
+        /* Tabs */
+        .tabs {
             display: flex;
-            justify-content: center;
             gap: 8px;
             margin-bottom: 24px;
-            padding: 12px;
+            padding: 6px;
             background: var(--glass-bg);
-            backdrop-filter: blur(20px);
+            backdrop-filter: blur(30px);
             border: 1px solid var(--glass-border);
-            border-radius: 16px;
+            border-radius: 20px;
+            overflow-x: auto;
+            scrollbar-width: none;
         }
         
-        .day-dot {
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            background: var(--glass-bg);
-            border: 2px solid var(--glass-border);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 10px;
-            font-weight: 600;
-            transition: all 0.3s ease;
+        .tabs::-webkit-scrollbar {
+            display: none;
+        }
+        
+        .tab {
+            padding: 12px 20px;
+            border-radius: 14px;
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
             cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 14px;
+            font-weight: 600;
+            white-space: nowrap;
+            font-family: 'Product Sans', sans-serif;
         }
         
-        .day-dot.current {
+        .tab.active {
+            background: var(--accent);
+            color: white;
+            box-shadow: 0 4px 16px var(--shadow);
+        }
+        
+        .tab:active:not(.active) {
+            transform: scale(0.95);
+        }
+        
+        /* View Toggle */
+        .view-toggle {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+        
+        .view-btn {
+            padding: 10px 20px;
+            border-radius: 12px;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 13px;
+            font-weight: 600;
+            font-family: 'Product Sans', sans-serif;
+        }
+        
+        .view-btn.active {
             background: var(--accent);
             border-color: var(--accent);
-            box-shadow: 0 0 20px rgba(99, 102, 241, 0.5);
-            transform: scale(1.15);
-        }
-        
-        .day-dot.has-tasks {
-            border-color: var(--warning);
-        }
-        
-        .day-dot.completed {
-            background: var(--success);
-            border-color: var(--success);
+            color: white;
         }
         
         /* Tasks container */
         .tasks-container {
-            margin-bottom: 120px;
-            max-height: calc(100vh - 280px);
+            max-height: calc(100vh - 380px);
             overflow-y: auto;
             padding-right: 8px;
         }
         
+        /* Card View */
+        .tasks-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+        
+        .task-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(30px);
+            border: 1px solid var(--card-border);
+            border-radius: 20px;
+            padding: 20px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .task-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--accent) 0%, var(--accent-secondary) 100%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .task-card:hover::before,
+        .task-card.completed::before {
+            opacity: 1;
+        }
+        
+        .task-card.completed {
+            opacity: 0.7;
+        }
+        
+        .task-card:active {
+            transform: scale(0.98);
+        }
+        
+        .task-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+        
+        .task-day-badge {
+            padding: 6px 12px;
+            border-radius: 10px;
+            background: var(--accent);
+            color: white;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        
+        .task-card-checkbox {
+            width: 24px;
+            height: 24px;
+            border-radius: 8px;
+            border: 2px solid var(--glass-border);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .task-card-checkbox.completed {
+            background: var(--success);
+            border-color: var(--success);
+        }
+        
+        .task-card-checkbox.completed::after {
+            content: '✓';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-size: 14px;
+            font-weight: 700;
+        }
+        
+        .task-card-text {
+            font-size: 16px;
+            font-weight: 500;
+            color: var(--text-primary);
+            line-height: 1.5;
+            margin-bottom: 8px;
+        }
+        
+        .task-card-text.completed {
+            text-decoration: line-through;
+            opacity: 0.6;
+        }
+        
+        .task-card-meta {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+        
+        .task-repeat-badge {
+            padding: 4px 8px;
+            border-radius: 6px;
+            background: var(--glass-bg);
+            font-weight: 600;
+        }
+        
+        /* List View */
         .day-section {
             margin-bottom: 24px;
             animation: slideIn 0.3s ease;
@@ -185,34 +373,27 @@
         
         .day-header {
             font-size: 16px;
-            font-weight: 600;
+            font-weight: 700;
             color: var(--text-secondary);
             margin-bottom: 12px;
             padding: 0 8px;
             display: flex;
             align-items: center;
             gap: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
         
         .day-header.current-day {
             color: var(--accent);
         }
         
-        .day-badge {
-            font-size: 10px;
-            padding: 2px 8px;
-            background: var(--accent);
-            border-radius: 8px;
-            color: white;
-            font-weight: 500;
-        }
-        
         .task-item {
-            background: var(--glass-bg);
-            backdrop-filter: blur(20px);
-            border: 1px solid var(--glass-border);
+            background: var(--card-bg);
+            backdrop-filter: blur(30px);
+            border: 1px solid var(--card-border);
             border-radius: 16px;
-            padding: 16px 20px;
+            padding: 18px 20px;
             margin-bottom: 12px;
             display: flex;
             align-items: center;
@@ -223,8 +404,6 @@
         
         .task-item:active {
             transform: scale(0.98);
-            background: rgba(99, 102, 241, 0.1);
-            border-color: var(--accent);
         }
         
         .task-checkbox {
@@ -258,6 +437,7 @@
             flex: 1;
             font-size: 15px;
             color: var(--text-primary);
+            font-weight: 500;
         }
         
         .task-text.completed {
@@ -278,6 +458,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            font-size: 20px;
         }
         
         .task-item:hover .task-delete {
@@ -291,20 +472,20 @@
             left: 16px;
             right: 16px;
             z-index: 1000;
-            max-width: 568px;
+            max-width: 648px;
             margin: 0 auto;
         }
         
         .command-input-container {
             background: var(--glass-bg);
-            backdrop-filter: blur(20px);
+            backdrop-filter: blur(30px);
             border: 1px solid var(--glass-border);
-            border-radius: 50px;
-            padding: 8px;
+            border-radius: 28px;
+            padding: 10px;
             display: flex;
             align-items: center;
-            gap: 8px;
-            box-shadow: 0 12px 48px rgba(0, 0, 0, 0.5);
+            gap: 12px;
+            box-shadow: 0 12px 48px var(--shadow);
             transition: all 0.3s ease;
         }
         
@@ -320,8 +501,9 @@
             outline: none;
             color: var(--text-primary);
             font-size: 15px;
-            padding: 12px 16px;
+            padding: 10px 16px;
             font-family: 'Product Sans', sans-serif;
+            font-weight: 500;
         }
         
         .command-input::placeholder {
@@ -351,24 +533,29 @@
         /* Empty state */
         .empty-state {
             text-align: center;
-            padding: 60px 20px;
+            padding: 80px 20px;
             color: var(--text-secondary);
         }
         
         .empty-state-icon {
-            font-size: 64px;
-            margin-bottom: 16px;
-            opacity: 0.3;
+            font-size: 80px;
+            margin-bottom: 20px;
+            opacity: 0.4;
         }
         
-        /* Settings Modal */
+        .empty-state-text {
+            font-size: 16px;
+            line-height: 1.6;
+        }
+        
+        /* Modal Overlay */
         .modal-overlay {
             position: fixed;
             top: 0;
             left: 0;
             right: 0;
             bottom: 0;
-            background: rgba(0, 0, 0, 0.8);
+            background: rgba(0, 0, 0, 0.7);
             backdrop-filter: blur(10px);
             display: none;
             align-items: center;
@@ -386,26 +573,27 @@
             to { opacity: 1; }
         }
         
+        /* Settings Modal */
         .modal {
             background: var(--glass-bg);
-            backdrop-filter: blur(30px);
+            backdrop-filter: blur(40px);
             border: 1px solid var(--glass-border);
-            border-radius: 24px;
-            padding: 32px 24px;
-            max-width: 400px;
+            border-radius: 28px;
+            padding: 32px 28px;
+            max-width: 420px;
             width: calc(100% - 48px);
             box-shadow: 0 24px 64px rgba(0, 0, 0, 0.5);
-            animation: slideUp 0.3s ease;
+            animation: slideUp 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
         
         @keyframes slideUp {
             from {
                 opacity: 0;
-                transform: translateY(20px);
+                transform: translateY(30px) scale(0.95);
             }
             to {
                 opacity: 1;
-                transform: translateY(0);
+                transform: translateY(0) scale(1);
             }
         }
         
@@ -413,27 +601,30 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 24px;
+            margin-bottom: 28px;
         }
         
         .modal-title {
-            font-size: 24px;
+            font-size: 26px;
             font-weight: 700;
-            background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+            background: linear-gradient(135deg, var(--accent) 0%, var(--accent-secondary) 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
         
         .modal-close {
-            width: 36px;
-            height: 36px;
+            width: 40px;
+            height: 40px;
             border-radius: 50%;
             background: transparent;
             border: none;
             color: var(--text-secondary);
             cursor: pointer;
-            font-size: 24px;
+            font-size: 28px;
             transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
         
         .modal-close:active {
@@ -441,69 +632,165 @@
         }
         
         .settings-section {
-            margin-bottom: 24px;
+            margin-bottom: 28px;
         }
         
         .settings-label {
             font-size: 14px;
             color: var(--text-secondary);
             margin-bottom: 12px;
-            font-weight: 500;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
         
-        .language-options {
+        .settings-options {
             display: flex;
             gap: 12px;
         }
         
-        .language-btn {
+        .settings-btn {
             flex: 1;
             padding: 16px;
-            background: var(--glass-bg);
+            background: var(--card-bg);
             border: 2px solid var(--glass-border);
             border-radius: 16px;
             color: var(--text-primary);
             cursor: pointer;
             transition: all 0.3s ease;
             font-size: 15px;
-            font-weight: 500;
+            font-weight: 600;
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 8px;
+            font-family: 'Product Sans', sans-serif;
         }
         
-        .language-btn.active {
+        .settings-btn.active {
             background: var(--accent);
             border-color: var(--accent);
+            color: white;
+            box-shadow: 0 4px 16px var(--shadow);
         }
         
-        .language-btn:active {
+        .settings-btn:active {
             transform: scale(0.98);
         }
         
-        .theme-options {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 12px;
+        /* Calendar Modal */
+        .calendar-modal {
+            background: var(--glass-bg);
+            backdrop-filter: blur(40px);
+            border: 1px solid var(--glass-border);
+            border-radius: 28px;
+            padding: 28px;
+            max-width: 400px;
+            width: calc(100% - 48px);
+            box-shadow: 0 24px 64px rgba(0, 0, 0, 0.5);
+            animation: slideUp 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
         
-        .theme-btn {
-            padding: 16px;
-            background: var(--glass-bg);
-            border: 2px solid var(--glass-border);
-            border-radius: 16px;
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .calendar-month {
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+        
+        .calendar-nav {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .calendar-nav-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 12px;
+            background: var(--card-bg);
+            border: 1px solid var(--glass-border);
             color: var(--text-primary);
             cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             transition: all 0.3s ease;
-            font-size: 14px;
-            font-weight: 500;
-            text-align: center;
+            font-size: 18px;
         }
         
-        .theme-btn.active {
-            border-color: var(--accent);
-            background: rgba(99, 102, 241, 0.1);
+        .calendar-nav-btn:active {
+            transform: scale(0.9);
+        }
+        
+        .calendar-weekdays {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+        
+        .calendar-weekday {
+            text-align: center;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            padding: 8px 0;
+        }
+        
+        .calendar-days {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 8px;
+        }
+        
+        .calendar-day {
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: var(--text-primary);
+            position: relative;
+        }
+        
+        .calendar-day:hover {
+            background: var(--glass-bg);
+        }
+        
+        .calendar-day.today {
+            background: var(--accent);
+            color: white;
+        }
+        
+        .calendar-day.has-tasks::after {
+            content: '';
+            position: absolute;
+            bottom: 4px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 4px;
+            height: 4px;
+            border-radius: 50%;
+            background: var(--accent-secondary);
+        }
+        
+        .calendar-day.today.has-tasks::after {
+            background: white;
+        }
+        
+        .calendar-day.other-month {
+            opacity: 0.3;
+            pointer-events: none;
         }
         
         /* Scrollbar */
@@ -523,21 +810,49 @@
         .tasks-container::-webkit-scrollbar-thumb:hover {
             background: var(--accent);
         }
+        
+        /* Animations */
+        @keyframes shimmer {
+            0% {
+                background-position: -200% 0;
+            }
+            100% {
+                background-position: 200% 0;
+            }
+        }
     </style>
 </head>
-<body>
+<body data-theme="auto">
     <div class="container">
         <div class="header">
-            <h1 id="appTitle">📋 Task Manager</h1>
-            <button class="settings-btn" onclick="openSettings()">⚙️</button>
+            <h1 id="appTitle">✨ Tasks</h1>
+            <div class="header-actions">
+                <button class="icon-btn" onclick="openCalendar()">📅</button>
+                <button class="icon-btn" onclick="openSettings()">⚙️</button>
+            </div>
         </div>
         
-        <div class="timeline-indicator" id="timelineIndicator">
-            <!-- Timeline dots will be dynamically inserted -->
+        <div class="tabs" id="tabsContainer">
+            <button class="tab active" data-filter="all">All</button>
+            <button class="tab" data-filter="mon">Mon</button>
+            <button class="tab" data-filter="tue">Tue</button>
+            <button class="tab" data-filter="wed">Wed</button>
+            <button class="tab" data-filter="thu">Thu</button>
+            <button class="tab" data-filter="fri">Fri</button>
+            <button class="tab" data-filter="sat">Sat</button>
+            <button class="tab" data-filter="sun">Sun</button>
+            <button class="tab" data-filter="daily">Daily</button>
+            <button class="tab" data-filter="weekly">Weekly</button>
+            <button class="tab" data-filter="monthly">Monthly</button>
+        </div>
+        
+        <div class="view-toggle">
+            <button class="view-btn active" onclick="setView('card')">📇 Cards</button>
+            <button class="view-btn" onclick="setView('list')">📋 List</button>
         </div>
         
         <div class="tasks-container" id="tasksContainer">
-            <!-- Tasks will be dynamically inserted here -->
+            <!-- Tasks will be dynamically inserted -->
         </div>
     </div>
     
@@ -555,7 +870,7 @@
     </div>
     
     <!-- Settings Modal -->
-    <div class="modal-overlay" id="settingsModal" onclick="closeModalOnOverlay(event)">
+    <div class="modal-overlay" id="settingsModal" onclick="closeModalOnOverlay(event, 'settings')">
         <div class="modal" onclick="event.stopPropagation()">
             <div class="modal-header">
                 <div class="modal-title" id="modalTitle">⚙️ Settings</div>
@@ -564,29 +879,61 @@
             
             <div class="settings-section">
                 <div class="settings-label" id="languageLabel">Language</div>
-                <div class="language-options">
-                    <button class="language-btn" id="langEn" onclick="setLanguage('en')">
+                <div class="settings-options">
+                    <button class="settings-btn" id="langEn" onclick="setLanguage('en')">
                         🇬🇧 English
                     </button>
-                    <button class="language-btn" id="langRu" onclick="setLanguage('ru')">
+                    <button class="settings-btn" id="langRu" onclick="setLanguage('ru')">
                         🇷🇺 Русский
                     </button>
                 </div>
             </div>
             
             <div class="settings-section">
-                <div class="settings-label" id="themeLabel">Interface</div>
-                <div class="theme-options">
-                    <button class="theme-btn active" id="themeDark">🌙 Dark</button>
-                    <button class="theme-btn" id="themeAuto">✨ Auto</button>
+                <div class="settings-label" id="themeLabel">Theme</div>
+                <div class="settings-options">
+                    <button class="settings-btn" id="themeLight" onclick="setTheme('light')">
+                        ☀️ Light
+                    </button>
+                    <button class="settings-btn" id="themeDark" onclick="setTheme('dark')">
+                        🌙 Dark
+                    </button>
+                    <button class="settings-btn" id="themeAuto" onclick="setTheme('auto')">
+                        ✨ Auto
+                    </button>
                 </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Calendar Modal -->
+    <div class="modal-overlay" id="calendarModal" onclick="closeModalOnOverlay(event, 'calendar')">
+        <div class="calendar-modal" onclick="event.stopPropagation()">
+            <div class="calendar-header">
+                <div class="calendar-month" id="calendarMonth">January 2024</div>
+                <div class="calendar-nav">
+                    <button class="calendar-nav-btn" onclick="changeMonth(-1)">‹</button>
+                    <button class="calendar-nav-btn" onclick="changeMonth(1)">›</button>
+                </div>
+            </div>
+            <div class="calendar-weekdays">
+                <div class="calendar-weekday">Mo</div>
+                <div class="calendar-weekday">Tu</div>
+                <div class="calendar-weekday">We</div>
+                <div class="calendar-weekday">Th</div>
+                <div class="calendar-weekday">Fr</div>
+                <div class="calendar-weekday">Sa</div>
+                <div class="calendar-weekday">Su</div>
+            </div>
+            <div class="calendar-days" id="calendarDays">
+                <!-- Calendar days will be generated -->
             </div>
         </div>
     </div>
 
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <script>
-        // Telegram Web App initialization
+        // Telegram Web App
         const tg = window.Telegram.WebApp;
         tg.expand();
         tg.MainButton.hide();
@@ -594,57 +941,82 @@
         // Translations
         const translations = {
             en: {
-                appTitle: '📋 Task Manager',
+                appTitle: '✨ Tasks',
                 placeholder: 'write a task...',
                 emptyStateIcon: '📝',
-                emptyStateText: 'No tasks<br>Add your first task below',
+                emptyStateText: 'No tasks yet<br>Add your first task below',
                 modalTitle: '⚙️ Settings',
                 languageLabel: 'Language',
-                themeLabel: 'Interface',
-                today: 'Today',
-                mon: 'Mon', tue: 'Tue', wed: 'Wed', thu: 'Thu', 
+                themeLabel: 'Theme',
+                viewCards: '📇 Cards',
+                viewList: '📋 List',
+                all: 'All',
+                mon: 'Mon', tue: 'Tue', wed: 'Wed', thu: 'Thu',
                 fri: 'Fri', sat: 'Sat', sun: 'Sun',
+                daily: 'Daily', weekly: 'Weekly', monthly: 'Monthly',
                 monday: 'Monday', tuesday: 'Tuesday', wednesday: 'Wednesday',
                 thursday: 'Thursday', friday: 'Friday', saturday: 'Saturday', sunday: 'Sunday',
                 errorFormat: 'Invalid format! Use: mon go gym'
             },
             ru: {
-                appTitle: '📋 Менеджер Задач',
+                appTitle: '✨ Задачи',
                 placeholder: 'напиши задачу...',
                 emptyStateIcon: '📝',
-                emptyStateText: 'Нет задач<br>Добавь первую задачу ниже',
+                emptyStateText: 'Пока нет задач<br>Добавь первую задачу ниже',
                 modalTitle: '⚙️ Настройки',
                 languageLabel: 'Язык',
-                themeLabel: 'Интерфейс',
-                today: 'Сегодня',
+                themeLabel: 'Тема',
+                viewCards: '📇 Карточки',
+                viewList: '📋 Список',
+                all: 'Все',
                 mon: 'Пн', tue: 'Вт', wed: 'Ср', thu: 'Чт',
                 fri: 'Пт', sat: 'Сб', sun: 'Вс',
+                daily: 'Каждый день', weekly: 'Каждую неделю', monthly: 'Каждый месяц',
                 monday: 'Понедельник', tuesday: 'Вторник', wednesday: 'Среда',
                 thursday: 'Четверг', friday: 'Пятница', saturday: 'Суббота', sunday: 'Воскресенье',
                 errorFormat: 'Неверный формат! Используй: пн в зал'
             }
         };
         
-        // Day mappings
         const daysMap = {
-            en: { mon: 'Monday', tue: 'Tuesday', wed: 'Wednesday', thu: 'Thursday', fri: 'Friday', sat: 'Saturday', sun: 'Sunday' },
-            ru: { 
-                пн: 'Понедельник', вт: 'Вторник', ср: 'Среда', чт: 'Четверг', пт: 'Пятница', сб: 'Суббота', вс: 'Воскресенье',
-                mon: 'Понедельник', tue: 'Вторник', wed: 'Среда', thu: 'Четверг', fri: 'Пятница', sat: 'Суббота', sun: 'Воскресенье'
+            en: {
+                mon: 'Monday', tue: 'Tuesday', wed: 'Wednesday', thu: 'Thursday',
+                fri: 'Friday', sat: 'Saturday', sun: 'Sunday',
+                daily: 'Daily', weekly: 'Weekly', monthly: 'Monthly'
+            },
+            ru: {
+                пн: 'Понедельник', вт: 'Вторник', ср: 'Среда', чт: 'Четверг',
+                пт: 'Пятница', сб: 'Суббота', вс: 'Воскресенье',
+                mon: 'Понедельник', tue: 'Вторник', wed: 'Среда', thu: 'Четверг',
+                fri: 'Пятница', sat: 'Суббота', sun: 'Воскресенье',
+                daily: 'Ежедневно', weekly: 'Еженедельно', monthly: 'Ежемесячно'
             }
         };
         
-        const ruToEnDays = { пн: 'mon', вт: 'tue', ср: 'wed', чт: 'thu', пт: 'fri', сб: 'sat', вс: 'sun' };
+        const ruToEnDays = {
+            пн: 'mon', вт: 'tue', ср: 'wed', чт: 'thu',
+            пт: 'fri', сб: 'sat', вс: 'sun'
+        };
+        
         const daysOrder = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'];
-        const dayEmojis = { mon: '📌', tue: '🔥', wed: '⚡', thu: '💪', fri: '🎯', sat: '🌟', sun: '✨' };
+        const dayEmojis = {
+            mon: '📌', tue: '🔥', wed: '⚡', thu: '💪',
+            fri: '🎯', sat: '🌟', sun: '✨'
+        };
         
         // State
         let tasks = loadTasks();
         let currentLanguage = localStorage.getItem('language') || 'en';
+        let currentTheme = localStorage.getItem('theme') || 'auto';
+        let currentView = localStorage.getItem('view') || 'card';
+        let currentFilter = 'all';
+        let calendarDate = new Date();
         
         // Initialize
+        applyTheme();
         updateLanguage();
-        renderTimeline();
+        updateThemeButtons();
+        updateViewButtons();
         renderTasks();
         
         function loadTasks() {
@@ -662,7 +1034,9 @@
         
         function normalizeDay(day) {
             const dayLower = day.toLowerCase();
-            if (daysOrder.includes(dayLower)) return dayLower;
+            if (daysOrder.includes(dayLower) || ['daily', 'weekly', 'monthly'].includes(dayLower)) {
+                return dayLower;
+            }
             return ruToEnDays[dayLower] || null;
         }
         
@@ -674,7 +1048,7 @@
             if (!day) return null;
             
             const task = parts.slice(1).join(' ');
-            return { day, task };
+            return { day, task, repeat: day === 'daily' || day === 'weekly' || day === 'monthly' ? day : 'once' };
         }
         
         function addTask() {
@@ -696,19 +1070,19 @@
             tasks[parsed.day].push({
                 text: parsed.task,
                 completed: false,
-                id: Date.now()
+                id: Date.now(),
+                repeat: parsed.repeat
             });
             
             saveTasks();
-            renderTimeline();
             renderTasks();
             input.value = '';
             
-            // Send data to bot
             tg.sendData(JSON.stringify({
                 action: 'add_task',
                 day: parsed.day,
-                task: parsed.task
+                task: parsed.task,
+                repeat: parsed.repeat
             }));
         }
         
@@ -716,19 +1090,16 @@
             const input = document.getElementById('commandInput');
             const originalPlaceholder = input.placeholder;
             input.placeholder = message;
-            input.style.borderColor = '#ef4444';
             setTimeout(() => {
                 input.placeholder = originalPlaceholder;
-                input.style.borderColor = '';
             }, 2000);
         }
         
         function toggleTask(day, taskId) {
-            const task = tasks[day].find(t => t.id === taskId);
+            const task = tasks[day]?.find(t => t.id === taskId);
             if (task) {
                 task.completed = !task.completed;
                 saveTasks();
-                renderTimeline();
                 renderTasks();
             }
         }
@@ -739,38 +1110,46 @@
                 delete tasks[day];
             }
             saveTasks();
-            renderTimeline();
             renderTasks();
         }
         
-        function renderTimeline() {
-            const container = document.getElementById('timelineIndicator');
-            const currentDay = getCurrentDayIndex();
-            const t = translations[currentLanguage];
-            
-            let html = '';
-            daysOrder.forEach((day, index) => {
-                const hasTasks = tasks[day] && tasks[day].length > 0;
-                const allCompleted = hasTasks && tasks[day].every(t => t.completed);
-                const isCurrent = index === currentDay;
-                
-                let classes = 'day-dot';
-                if (isCurrent) classes += ' current';
-                if (hasTasks && !allCompleted) classes += ' has-tasks';
-                if (allCompleted) classes += ' completed';
-                
-                html += `<div class="${classes}" title="${t[day]}">${t[day]}</div>`;
+        function setView(view) {
+            currentView = view;
+            localStorage.setItem('view', view);
+            updateViewButtons();
+            renderTasks();
+        }
+        
+        function updateViewButtons() {
+            document.querySelectorAll('.view-btn').forEach(btn => {
+                btn.classList.remove('active');
             });
-            
-            container.innerHTML = html;
+            document.querySelector(`[onclick="setView('${currentView}')"]`)?.classList.add('active');
+        }
+        
+        function setFilter(filter) {
+            currentFilter = filter;
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.querySelector(`[data-filter="${filter}"]`)?.classList.add('active');
+            renderTasks();
         }
         
         function renderTasks() {
             const container = document.getElementById('tasksContainer');
             const t = translations[currentLanguage];
-            const currentDay = getCurrentDayIndex();
             
-            if (Object.keys(tasks).length === 0) {
+            let filteredTasks = {};
+            if (currentFilter === 'all') {
+                filteredTasks = tasks;
+            } else {
+                if (tasks[currentFilter]) {
+                    filteredTasks[currentFilter] = tasks[currentFilter];
+                }
+            }
+            
+            if (Object.keys(filteredTasks).length === 0) {
                 container.innerHTML = `
                     <div class="empty-state">
                         <div class="empty-state-icon">${t.emptyStateIcon}</div>
@@ -780,9 +1159,44 @@
                 return;
             }
             
+            if (currentView === 'card') {
+                renderCardView(container, filteredTasks, t);
+            } else {
+                renderListView(container, filteredTasks, t);
+            }
+        }
+        
+        function renderCardView(container, filteredTasks, t) {
+            let html = '<div class="tasks-grid">';
+            
+            for (const [day, dayTasks] of Object.entries(filteredTasks)) {
+                dayTasks.forEach(task => {
+                    const dayName = daysMap[currentLanguage][day] || t[day];
+                    html += `
+                        <div class="task-card ${task.completed ? 'completed' : ''}" onclick="toggleTask('${day}', ${task.id})">
+                            <div class="task-card-header">
+                                <div class="task-day-badge">${dayEmojis[day] || '📍'} ${dayName}</div>
+                                <div class="task-card-checkbox ${task.completed ? 'completed' : ''}"></div>
+                            </div>
+                            <div class="task-card-text ${task.completed ? 'completed' : ''}">${task.text}</div>
+                            <div class="task-card-meta">
+                                ${task.repeat && task.repeat !== 'once' ? `<span class="task-repeat-badge">🔄 ${t[task.repeat]}</span>` : ''}
+                            </div>
+                        </div>
+                    `;
+                });
+            }
+            
+            html += '</div>';
+            container.innerHTML = html;
+        }
+        
+        function renderListView(container, filteredTasks, t) {
             let html = '';
+            const currentDay = getCurrentDayIndex();
+            
             daysOrder.forEach((day, index) => {
-                if (tasks[day] && tasks[day].length > 0) {
+                if (filteredTasks[day] && filteredTasks[day].length > 0) {
                     const isCurrentDay = index === currentDay;
                     const dayName = daysMap[currentLanguage][day] || t[day + 'day'];
                     
@@ -790,13 +1204,33 @@
                         <div class="day-section">
                             <div class="day-header ${isCurrentDay ? 'current-day' : ''}">
                                 ${dayEmojis[day]} ${dayName}
-                                ${isCurrentDay ? `<span class="day-badge">${t.today}</span>` : ''}
                             </div>
-                            ${tasks[day].map(task => `
+                            ${filteredTasks[day].map(task => `
                                 <div class="task-item" onclick="toggleTask('${day}', ${task.id})">
                                     <div class="task-checkbox ${task.completed ? 'completed' : ''}"></div>
                                     <div class="task-text ${task.completed ? 'completed' : ''}">${task.text}</div>
+                                    ${task.repeat && task.repeat !== 'once' ? `<span class="task-repeat-badge">🔄</span>` : ''}
                                     <button class="task-delete" onclick="event.stopPropagation(); deleteTask('${day}', ${task.id})">×</button>
+                                </div>
+                            `).join('')}
+                        </div>
+                    `;
+                }
+            });
+            
+            // Handle special repeating tasks
+            ['daily', 'weekly', 'monthly'].forEach(repeat => {
+                if (filteredTasks[repeat] && filteredTasks[repeat].length > 0) {
+                    html += `
+                        <div class="day-section">
+                            <div class="day-header">
+                                🔄 ${t[repeat]}
+                            </div>
+                            ${filteredTasks[repeat].map(task => `
+                                <div class="task-item" onclick="toggleTask('${repeat}', ${task.id})">
+                                    <div class="task-checkbox ${task.completed ? 'completed' : ''}"></div>
+                                    <div class="task-text ${task.completed ? 'completed' : ''}">${task.text}</div>
+                                    <button class="task-delete" onclick="event.stopPropagation(); deleteTask('${repeat}', ${task.id})">×</button>
                                 </div>
                             `).join('')}
                         </div>
@@ -807,30 +1241,13 @@
             container.innerHTML = html;
         }
         
-        function openSettings() {
-            document.getElementById('settingsModal').classList.add('active');
-            updateLanguageButtons();
-        }
-        
-        function closeSettings() {
-            document.getElementById('settingsModal').classList.remove('active');
-        }
-        
-        function closeModalOnOverlay(event) {
-            if (event.target.id === 'settingsModal') {
-                closeSettings();
-            }
-        }
-        
         function setLanguage(lang) {
             currentLanguage = lang;
             localStorage.setItem('language', lang);
             updateLanguage();
             updateLanguageButtons();
-            renderTimeline();
             renderTasks();
             
-            // Send language to bot
             tg.sendData(JSON.stringify({
                 action: 'set_language',
                 language: lang
@@ -844,6 +1261,16 @@
             document.getElementById('modalTitle').textContent = t.modalTitle;
             document.getElementById('languageLabel').textContent = t.languageLabel;
             document.getElementById('themeLabel').textContent = t.themeLabel;
+            
+            // Update view buttons text
+            document.querySelector('[onclick="setView(\'card\')"]').innerHTML = t.viewCards;
+            document.querySelector('[onclick="setView(\'list\')"]').innerHTML = t.viewList;
+            
+            // Update tabs
+            document.querySelectorAll('.tab').forEach(tab => {
+                const filter = tab.getAttribute('data-filter');
+                tab.textContent = t[filter] || filter;
+            });
         }
         
         function updateLanguageButtons() {
@@ -851,17 +1278,137 @@
             document.getElementById('langRu').classList.toggle('active', currentLanguage === 'ru');
         }
         
-        // Keyboard handler
+        function setTheme(theme) {
+            currentTheme = theme;
+            localStorage.setItem('theme', theme);
+            applyTheme();
+            updateThemeButtons();
+            
+            tg.sendData(JSON.stringify({
+                action: 'set_theme',
+                theme: theme
+            }));
+        }
+        
+        function applyTheme() {
+            if (currentTheme === 'auto') {
+                const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+                document.body.setAttribute('data-theme', prefersDark ? 'dark' : 'light');
+            } else {
+                document.body.setAttribute('data-theme', currentTheme);
+            }
+        }
+        
+        function updateThemeButtons() {
+            document.getElementById('themeLight').classList.toggle('active', currentTheme === 'light');
+            document.getElementById('themeDark').classList.toggle('active', currentTheme === 'dark');
+            document.getElementById('themeAuto').classList.toggle('active', currentTheme === 'auto');
+        }
+        
+        function openSettings() {
+            document.getElementById('settingsModal').classList.add('active');
+            updateLanguageButtons();
+            updateThemeButtons();
+        }
+        
+        function closeSettings() {
+            document.getElementById('settingsModal').classList.remove('active');
+        }
+        
+        function openCalendar() {
+            document.getElementById('calendarModal').classList.add('active');
+            renderCalendar();
+        }
+        
+        function closeCalendar() {
+            document.getElementById('calendarModal').classList.remove('active');
+        }
+        
+        function closeModalOnOverlay(event, type) {
+            if (event.target.id === `${type}Modal`) {
+                if (type === 'settings') closeSettings();
+                if (type === 'calendar') closeCalendar();
+            }
+        }
+        
+        function changeMonth(delta) {
+            calendarDate.setMonth(calendarDate.getMonth() + delta);
+            renderCalendar();
+        }
+        
+        function renderCalendar() {
+            const year = calendarDate.getFullYear();
+            const month = calendarDate.getMonth();
+            
+            const monthNames = currentLanguage === 'en' 
+                ? ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+                : ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'];
+            
+            document.getElementById('calendarMonth').textContent = `${monthNames[month]} ${year}`;
+            
+            const firstDay = new Date(year, month, 1).getDay();
+            const daysInMonth = new Date(year, month + 1, 0).getDate();
+            const today = new Date();
+            
+            let html = '';
+            const startDay = firstDay === 0 ? 6 : firstDay - 1;
+            
+            // Previous month days
+            const prevMonthDays = new Date(year, month, 0).getDate();
+            for (let i = startDay - 1; i >= 0; i--) {
+                html += `<div class="calendar-day other-month">${prevMonthDays - i}</div>`;
+            }
+            
+            // Current month days
+            for (let day = 1; day <= daysInMonth; day++) {
+                const date = new Date(year, month, day);
+                const isToday = date.toDateString() === today.toDateString();
+                const dayOfWeek = date.getDay() === 0 ? 6 : date.getDay() - 1;
+                const dayCode = daysOrder[dayOfWeek];
+                const hasTasks = tasks[dayCode] && tasks[dayCode].length > 0;
+                
+                let classes = 'calendar-day';
+                if (isToday) classes += ' today';
+                if (hasTasks) classes += ' has-tasks';
+                
+                html += `<div class="${classes}">${day}</div>`;
+            }
+            
+            // Next month days
+            const totalCells = startDay + daysInMonth;
+            const remainingCells = totalCells % 7 === 0 ? 0 : 7 - (totalCells % 7);
+            for (let i = 1; i <= remainingCells; i++) {
+                html += `<div class="calendar-day other-month">${i}</div>`;
+            }
+            
+            document.getElementById('calendarDays').innerHTML = html;
+        }
+        
+        // Tab click handlers
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                setFilter(tab.getAttribute('data-filter'));
+            });
+        });
+        
+        // Keyboard handlers
         document.getElementById('commandInput').addEventListener('keypress', (e) => {
             if (e.key === 'Enter') {
                 addTask();
             }
         });
         
-        // Close modal on Escape
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape') {
                 closeSettings();
+                closeCalendar();
+            }
+        });
+        
+        // Theme auto-switch listener
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+            if (currentTheme === 'auto') {
+                applyTheme();
             }
         });
     </script>
