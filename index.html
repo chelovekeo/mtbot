@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>Task Manager</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Product+Sans:wght@400;500;700&display=swap');
@@ -11,6 +11,7 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
         }
         
         :root {
@@ -23,6 +24,8 @@
             --text-primary: #ffffff;
             --text-secondary: #a1a1aa;
             --success: #22c55e;
+            --warning: #f59e0b;
+            --danger: #ef4444;
         }
         
         body {
@@ -30,11 +33,39 @@
             background: linear-gradient(135deg, #0a0a0f 0%, #1a1a2e 100%);
             color: var(--text-primary);
             min-height: 100vh;
-            padding: 20px;
+            padding: 20px 16px;
             overflow-x: hidden;
+            position: relative;
         }
         
-        /* Liquid glass effect */
+        /* Animated background */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 20% 50%, rgba(99, 102, 241, 0.1) 0%, transparent 50%),
+                        radial-gradient(circle at 80% 80%, rgba(168, 85, 247, 0.1) 0%, transparent 50%);
+            animation: pulse 15s ease-in-out infinite;
+            pointer-events: none;
+            z-index: 0;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 1; }
+        }
+        
+        .container {
+            position: relative;
+            z-index: 1;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        /* Glass effect */
         .glass-container {
             background: var(--glass-bg);
             backdrop-filter: blur(20px);
@@ -59,6 +90,7 @@
             background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
         
         .settings-btn {
@@ -77,29 +109,102 @@
             font-size: 20px;
         }
         
-        .settings-btn:hover {
+        .settings-btn:active {
+            transform: scale(0.95);
             background: var(--accent);
             border-color: var(--accent);
-            transform: rotate(45deg);
+        }
+        
+        /* Timeline indicator */
+        .timeline-indicator {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-bottom: 24px;
+            padding: 12px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+        }
+        
+        .day-dot {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: var(--glass-bg);
+            border: 2px solid var(--glass-border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .day-dot.current {
+            background: var(--accent);
+            border-color: var(--accent);
+            box-shadow: 0 0 20px rgba(99, 102, 241, 0.5);
+            transform: scale(1.15);
+        }
+        
+        .day-dot.has-tasks {
+            border-color: var(--warning);
+        }
+        
+        .day-dot.completed {
+            background: var(--success);
+            border-color: var(--success);
         }
         
         /* Tasks container */
         .tasks-container {
-            margin-bottom: 100px;
-            max-height: calc(100vh - 200px);
+            margin-bottom: 120px;
+            max-height: calc(100vh - 280px);
             overflow-y: auto;
+            padding-right: 8px;
         }
         
         .day-section {
             margin-bottom: 24px;
+            animation: slideIn 0.3s ease;
+        }
+        
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
         
         .day-header {
-            font-size: 18px;
+            font-size: 16px;
             font-weight: 600;
             color: var(--text-secondary);
             margin-bottom: 12px;
             padding: 0 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .day-header.current-day {
+            color: var(--accent);
+        }
+        
+        .day-badge {
+            font-size: 10px;
+            padding: 2px 8px;
+            background: var(--accent);
+            border-radius: 8px;
+            color: white;
+            font-weight: 500;
         }
         
         .task-item {
@@ -116,10 +221,10 @@
             cursor: pointer;
         }
         
-        .task-item:hover {
+        .task-item:active {
+            transform: scale(0.98);
             background: rgba(99, 102, 241, 0.1);
             border-color: var(--accent);
-            transform: translateX(4px);
         }
         
         .task-checkbox {
@@ -130,12 +235,12 @@
             cursor: pointer;
             flex-shrink: 0;
             transition: all 0.3s ease;
+            position: relative;
         }
         
         .task-checkbox.completed {
             background: var(--success);
             border-color: var(--success);
-            position: relative;
         }
         
         .task-checkbox.completed::after {
@@ -160,13 +265,34 @@
             opacity: 0.5;
         }
         
+        .task-delete {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: transparent;
+            border: none;
+            color: var(--danger);
+            cursor: pointer;
+            opacity: 0;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .task-item:hover .task-delete {
+            opacity: 1;
+        }
+        
         /* Command input area */
         .command-area {
             position: fixed;
             bottom: 20px;
-            left: 20px;
-            right: 20px;
+            left: 16px;
+            right: 16px;
             z-index: 1000;
+            max-width: 568px;
+            margin: 0 auto;
         }
         
         .command-input-container {
@@ -217,13 +343,9 @@
             font-size: 20px;
         }
         
-        .send-btn:hover {
-            background: var(--accent-hover);
-            transform: scale(1.05);
-        }
-        
         .send-btn:active {
-            transform: scale(0.95);
+            transform: scale(0.9);
+            background: var(--accent-hover);
         }
         
         /* Empty state */
@@ -239,11 +361,152 @@
             opacity: 0.3;
         }
         
-        .empty-state-text {
-            font-size: 16px;
+        /* Settings Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            animation: fadeIn 0.3s ease;
         }
         
-        /* Scrollbar styling */
+        .modal-overlay.active {
+            display: flex;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        .modal {
+            background: var(--glass-bg);
+            backdrop-filter: blur(30px);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 32px 24px;
+            max-width: 400px;
+            width: calc(100% - 48px);
+            box-shadow: 0 24px 64px rgba(0, 0, 0, 0.5);
+            animation: slideUp 0.3s ease;
+        }
+        
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+        
+        .modal-title {
+            font-size: 24px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .modal-close {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+            font-size: 24px;
+            transition: all 0.3s ease;
+        }
+        
+        .modal-close:active {
+            transform: scale(0.9);
+        }
+        
+        .settings-section {
+            margin-bottom: 24px;
+        }
+        
+        .settings-label {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-bottom: 12px;
+            font-weight: 500;
+        }
+        
+        .language-options {
+            display: flex;
+            gap: 12px;
+        }
+        
+        .language-btn {
+            flex: 1;
+            padding: 16px;
+            background: var(--glass-bg);
+            border: 2px solid var(--glass-border);
+            border-radius: 16px;
+            color: var(--text-primary);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 15px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        
+        .language-btn.active {
+            background: var(--accent);
+            border-color: var(--accent);
+        }
+        
+        .language-btn:active {
+            transform: scale(0.98);
+        }
+        
+        .theme-options {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+        
+        .theme-btn {
+            padding: 16px;
+            background: var(--glass-bg);
+            border: 2px solid var(--glass-border);
+            border-radius: 16px;
+            color: var(--text-primary);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 14px;
+            font-weight: 500;
+            text-align: center;
+        }
+        
+        .theme-btn.active {
+            border-color: var(--accent);
+            background: rgba(99, 102, 241, 0.1);
+        }
+        
+        /* Scrollbar */
         .tasks-container::-webkit-scrollbar {
             width: 6px;
         }
@@ -263,13 +526,19 @@
     </style>
 </head>
 <body>
-    <div class="header">
-        <h1>📋 Task Manager</h1>
-        <button class="settings-btn" onclick="openSettings()">⚙️</button>
-    </div>
-    
-    <div class="tasks-container" id="tasksContainer">
-        <!-- Tasks will be dynamically inserted here -->
+    <div class="container">
+        <div class="header">
+            <h1 id="appTitle">📋 Task Manager</h1>
+            <button class="settings-btn" onclick="openSettings()">⚙️</button>
+        </div>
+        
+        <div class="timeline-indicator" id="timelineIndicator">
+            <!-- Timeline dots will be dynamically inserted -->
+        </div>
+        
+        <div class="tasks-container" id="tasksContainer">
+            <!-- Tasks will be dynamically inserted here -->
+        </div>
     </div>
     
     <div class="command-area">
@@ -278,60 +547,136 @@
                 type="text" 
                 class="command-input" 
                 id="commandInput"
-                placeholder="mon go gym, tue 20 push-ups..."
+                placeholder="write a task..."
                 autocomplete="off"
             >
             <button class="send-btn" onclick="addTask()">➤</button>
         </div>
     </div>
+    
+    <!-- Settings Modal -->
+    <div class="modal-overlay" id="settingsModal" onclick="closeModalOnOverlay(event)">
+        <div class="modal" onclick="event.stopPropagation()">
+            <div class="modal-header">
+                <div class="modal-title" id="modalTitle">⚙️ Settings</div>
+                <button class="modal-close" onclick="closeSettings()">×</button>
+            </div>
+            
+            <div class="settings-section">
+                <div class="settings-label" id="languageLabel">Language</div>
+                <div class="language-options">
+                    <button class="language-btn" id="langEn" onclick="setLanguage('en')">
+                        🇬🇧 English
+                    </button>
+                    <button class="language-btn" id="langRu" onclick="setLanguage('ru')">
+                        🇷🇺 Русский
+                    </button>
+                </div>
+            </div>
+            
+            <div class="settings-section">
+                <div class="settings-label" id="themeLabel">Interface</div>
+                <div class="theme-options">
+                    <button class="theme-btn active" id="themeDark">🌙 Dark</button>
+                    <button class="theme-btn" id="themeAuto">✨ Auto</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <script>
-        // Инициализация Telegram Web App
+        // Telegram Web App initialization
         const tg = window.Telegram.WebApp;
         tg.expand();
         tg.MainButton.hide();
         
-        // Словарь дней недели
-        const daysMap = {
-            'mon': 'Понедельник',
-            'tue': 'Вторник',
-            'wed': 'Среда',
-            'thu': 'Четверг',
-            'fri': 'Пятница',
-            'sat': 'Суббота',
-            'sun': 'Воскресенье'
+        // Translations
+        const translations = {
+            en: {
+                appTitle: '📋 Task Manager',
+                placeholder: 'write a task...',
+                emptyStateIcon: '📝',
+                emptyStateText: 'No tasks<br>Add your first task below',
+                modalTitle: '⚙️ Settings',
+                languageLabel: 'Language',
+                themeLabel: 'Interface',
+                today: 'Today',
+                mon: 'Mon', tue: 'Tue', wed: 'Wed', thu: 'Thu', 
+                fri: 'Fri', sat: 'Sat', sun: 'Sun',
+                monday: 'Monday', tuesday: 'Tuesday', wednesday: 'Wednesday',
+                thursday: 'Thursday', friday: 'Friday', saturday: 'Saturday', sunday: 'Sunday',
+                errorFormat: 'Invalid format! Use: mon go gym'
+            },
+            ru: {
+                appTitle: '📋 Менеджер Задач',
+                placeholder: 'напиши задачу...',
+                emptyStateIcon: '📝',
+                emptyStateText: 'Нет задач<br>Добавь первую задачу ниже',
+                modalTitle: '⚙️ Настройки',
+                languageLabel: 'Язык',
+                themeLabel: 'Интерфейс',
+                today: 'Сегодня',
+                mon: 'Пн', tue: 'Вт', wed: 'Ср', thu: 'Чт',
+                fri: 'Пт', sat: 'Сб', sun: 'Вс',
+                monday: 'Понедельник', tuesday: 'Вторник', wednesday: 'Среда',
+                thursday: 'Четверг', friday: 'Пятница', saturday: 'Суббота', sunday: 'Воскресенье',
+                errorFormat: 'Неверный формат! Используй: пн в зал'
+            }
         };
         
+        // Day mappings
+        const daysMap = {
+            en: { mon: 'Monday', tue: 'Tuesday', wed: 'Wednesday', thu: 'Thursday', fri: 'Friday', sat: 'Saturday', sun: 'Sunday' },
+            ru: { 
+                пн: 'Понедельник', вт: 'Вторник', ср: 'Среда', чт: 'Четверг', пт: 'Пятница', сб: 'Суббота', вс: 'Воскресенье',
+                mon: 'Понедельник', tue: 'Вторник', wed: 'Среда', thu: 'Четверг', fri: 'Пятница', sat: 'Суббота', sun: 'Воскресенье'
+            }
+        };
+        
+        const ruToEnDays = { пн: 'mon', вт: 'tue', ср: 'wed', чт: 'thu', пт: 'fri', сб: 'sat', вс: 'sun' };
         const daysOrder = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'];
+        const dayEmojis = { mon: '📌', tue: '🔥', wed: '⚡', thu: '💪', fri: '🎯', sat: '🌟', sun: '✨' };
         
-        // Хранилище задач
+        // State
         let tasks = loadTasks();
+        let currentLanguage = localStorage.getItem('language') || 'en';
         
-        // Загрузка задач из localStorage
+        // Initialize
+        updateLanguage();
+        renderTimeline();
+        renderTasks();
+        
         function loadTasks() {
             const saved = localStorage.getItem('tasks');
             return saved ? JSON.parse(saved) : {};
         }
         
-        // Сохранение задач в localStorage
         function saveTasks() {
             localStorage.setItem('tasks', JSON.stringify(tasks));
         }
         
-        // Парсинг команды
+        function getCurrentDayIndex() {
+            return new Date().getDay() === 0 ? 6 : new Date().getDay() - 1;
+        }
+        
+        function normalizeDay(day) {
+            const dayLower = day.toLowerCase();
+            if (daysOrder.includes(dayLower)) return dayLower;
+            return ruToEnDays[dayLower] || null;
+        }
+        
         function parseCommand(command) {
-            const parts = command.trim().split(' ');
+            const parts = command.trim().split(/\s+/);
             if (parts.length < 2) return null;
             
-            const day = parts[0].toLowerCase();
-            if (!daysMap[day]) return null;
+            const day = normalizeDay(parts[0]);
+            if (!day) return null;
             
             const task = parts.slice(1).join(' ');
             return { day, task };
         }
         
-        // Добавление задачи
         function addTask() {
             const input = document.getElementById('commandInput');
             const command = input.value.trim();
@@ -340,7 +685,7 @@
             
             const parsed = parseCommand(command);
             if (!parsed) {
-                showError('Неверный формат! Используй: mon go gym');
+                showError(translations[currentLanguage].errorFormat);
                 return;
             }
             
@@ -355,63 +700,103 @@
             });
             
             saveTasks();
+            renderTimeline();
             renderTasks();
             input.value = '';
             
-            // Отправляем данные в бот
+            // Send data to bot
             tg.sendData(JSON.stringify({
                 action: 'add_task',
                 day: parsed.day,
-                day_name: daysMap[parsed.day],
                 task: parsed.task
             }));
         }
         
-        // Отображение ошибки
         function showError(message) {
             const input = document.getElementById('commandInput');
+            const originalPlaceholder = input.placeholder;
             input.placeholder = message;
             input.style.borderColor = '#ef4444';
             setTimeout(() => {
-                input.placeholder = 'mon go gym, tue 20 push-ups...';
+                input.placeholder = originalPlaceholder;
                 input.style.borderColor = '';
             }, 2000);
         }
         
-        // Переключение статуса задачи
         function toggleTask(day, taskId) {
             const task = tasks[day].find(t => t.id === taskId);
             if (task) {
                 task.completed = !task.completed;
                 saveTasks();
+                renderTimeline();
                 renderTasks();
             }
         }
         
-        // Отрисовка задач
+        function deleteTask(day, taskId) {
+            tasks[day] = tasks[day].filter(t => t.id !== taskId);
+            if (tasks[day].length === 0) {
+                delete tasks[day];
+            }
+            saveTasks();
+            renderTimeline();
+            renderTasks();
+        }
+        
+        function renderTimeline() {
+            const container = document.getElementById('timelineIndicator');
+            const currentDay = getCurrentDayIndex();
+            const t = translations[currentLanguage];
+            
+            let html = '';
+            daysOrder.forEach((day, index) => {
+                const hasTasks = tasks[day] && tasks[day].length > 0;
+                const allCompleted = hasTasks && tasks[day].every(t => t.completed);
+                const isCurrent = index === currentDay;
+                
+                let classes = 'day-dot';
+                if (isCurrent) classes += ' current';
+                if (hasTasks && !allCompleted) classes += ' has-tasks';
+                if (allCompleted) classes += ' completed';
+                
+                html += `<div class="${classes}" title="${t[day]}">${t[day]}</div>`;
+            });
+            
+            container.innerHTML = html;
+        }
+        
         function renderTasks() {
             const container = document.getElementById('tasksContainer');
+            const t = translations[currentLanguage];
+            const currentDay = getCurrentDayIndex();
             
             if (Object.keys(tasks).length === 0) {
                 container.innerHTML = `
                     <div class="empty-state">
-                        <div class="empty-state-icon">📝</div>
-                        <div class="empty-state-text">Нет задач<br>Добавь первую задачу ниже</div>
+                        <div class="empty-state-icon">${t.emptyStateIcon}</div>
+                        <div class="empty-state-text">${t.emptyStateText}</div>
                     </div>
                 `;
                 return;
             }
             
             let html = '';
-            daysOrder.forEach(day => {
+            daysOrder.forEach((day, index) => {
                 if (tasks[day] && tasks[day].length > 0) {
+                    const isCurrentDay = index === currentDay;
+                    const dayName = daysMap[currentLanguage][day] || t[day + 'day'];
+                    
                     html += `
                         <div class="day-section">
-                            <div class="day-header">${daysMap[day]}</div>
+                            <div class="day-header ${isCurrentDay ? 'current-day' : ''}">
+                                ${dayEmojis[day]} ${dayName}
+                                ${isCurrentDay ? `<span class="day-badge">${t.today}</span>` : ''}
+                            </div>
                             ${tasks[day].map(task => `
                                 <div class="task-item" onclick="toggleTask('${day}', ${task.id})">
                                     <div class="task-checkbox ${task.completed ? 'completed' : ''}"></div>
                                     <div class="task-text ${task.completed ? 'completed' : ''}">${task.text}</div>
+                                    <button class="task-delete" onclick="event.stopPropagation(); deleteTask('${day}', ${task.id})">×</button>
                                 </div>
                             `).join('')}
                         </div>
@@ -422,24 +807,63 @@
             container.innerHTML = html;
         }
         
-        // Настройки
         function openSettings() {
-            tg.showPopup({
-                title: 'Настройки',
-                message: 'Настройки будут доступны в следующей версии',
-                buttons: [{type: 'ok'}]
-            });
+            document.getElementById('settingsModal').classList.add('active');
+            updateLanguageButtons();
         }
         
-        // Обработка Enter
+        function closeSettings() {
+            document.getElementById('settingsModal').classList.remove('active');
+        }
+        
+        function closeModalOnOverlay(event) {
+            if (event.target.id === 'settingsModal') {
+                closeSettings();
+            }
+        }
+        
+        function setLanguage(lang) {
+            currentLanguage = lang;
+            localStorage.setItem('language', lang);
+            updateLanguage();
+            updateLanguageButtons();
+            renderTimeline();
+            renderTasks();
+            
+            // Send language to bot
+            tg.sendData(JSON.stringify({
+                action: 'set_language',
+                language: lang
+            }));
+        }
+        
+        function updateLanguage() {
+            const t = translations[currentLanguage];
+            document.getElementById('appTitle').textContent = t.appTitle;
+            document.getElementById('commandInput').placeholder = t.placeholder;
+            document.getElementById('modalTitle').textContent = t.modalTitle;
+            document.getElementById('languageLabel').textContent = t.languageLabel;
+            document.getElementById('themeLabel').textContent = t.themeLabel;
+        }
+        
+        function updateLanguageButtons() {
+            document.getElementById('langEn').classList.toggle('active', currentLanguage === 'en');
+            document.getElementById('langRu').classList.toggle('active', currentLanguage === 'ru');
+        }
+        
+        // Keyboard handler
         document.getElementById('commandInput').addEventListener('keypress', (e) => {
             if (e.key === 'Enter') {
                 addTask();
             }
         });
         
-        // Инициализация
-        renderTasks();
+        // Close modal on Escape
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                closeSettings();
+            }
+        });
     </script>
 </body>
 </html>
