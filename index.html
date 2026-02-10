@@ -27,7 +27,6 @@
             --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.08);
             --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.12);
             --gradient-primary: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
-            --gradient-success: linear-gradient(135deg, var(--accent-green), var(--accent-blue));
         }
 
         [data-theme="dark"] {
@@ -51,6 +50,7 @@
             transition: background 0.3s cubic-bezier(0.4, 0, 0.2, 1), color 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
+            touch-action: pan-y;
         }
 
         .app-container {
@@ -58,7 +58,7 @@
             min-height: 100vh;
             display: flex;
             flex-direction: column;
-            padding-bottom: 120px;
+            padding-bottom: 140px;
         }
 
         /* Header */
@@ -106,16 +106,12 @@
             cursor: pointer;
             font-size: 20px;
             transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-            position: relative;
+            -webkit-tap-highlight-color: transparent;
         }
 
         .icon-btn:active {
             transform: scale(0.95);
-        }
-
-        .icon-btn:hover {
             background: var(--bg-tertiary);
-            box-shadow: var(--shadow-sm);
         }
 
         /* Today Section */
@@ -218,6 +214,11 @@
             white-space: nowrap;
             cursor: pointer;
             transition: all 0.2s;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .filter-chip:active {
+            transform: scale(0.95);
         }
 
         .filter-chip.active {
@@ -236,9 +237,23 @@
             align-items: flex-start;
             gap: 12px;
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            cursor: pointer;
+            cursor: move;
             position: relative;
             overflow: hidden;
+            -webkit-tap-highlight-color: transparent;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        .task-item.dragging {
+            opacity: 0.5;
+            transform: scale(0.95);
+        }
+
+        .task-item.drag-over {
+            border-color: var(--accent-blue);
+            border-width: 2px;
+            padding: 15px;
         }
 
         .task-item::before {
@@ -253,12 +268,16 @@
             transition: opacity 0.3s;
         }
 
-        .task-item:hover::before {
+        .task-item:active::before {
             opacity: 1;
         }
 
-        .task-item:active {
-            transform: scale(0.98);
+        .drag-handle {
+            font-size: 18px;
+            color: var(--text-tertiary);
+            cursor: move;
+            padding: 4px;
+            margin-left: -4px;
         }
 
         .task-checkbox {
@@ -273,6 +292,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            -webkit-tap-highlight-color: transparent;
         }
 
         .task-checkbox.checked {
@@ -338,13 +358,9 @@
             color: #FF5252;
             font-size: 20px;
             cursor: pointer;
-            padding: 4px;
-            opacity: 0;
+            padding: 4px 8px;
             transition: opacity 0.2s;
-        }
-
-        .task-item:hover .delete-btn {
-            opacity: 1;
+            -webkit-tap-highlight-color: transparent;
         }
 
         .empty-state {
@@ -377,7 +393,7 @@
             right: 0;
             background: var(--bg-primary);
             border-top: 1px solid var(--border-color);
-            padding: 16px 20px 20px;
+            padding: 16px 20px calc(env(safe-area-inset-bottom) + 16px);
             z-index: 200;
             box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.1);
             backdrop-filter: blur(20px);
@@ -388,10 +404,10 @@
             background: var(--bg-secondary);
             border: 2px solid var(--border-color);
             border-radius: 16px;
-            padding: 14px 16px;
+            padding: 12px 14px;
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 10px;
             transition: all 0.3s;
         }
 
@@ -403,6 +419,7 @@
         .cmd-icon {
             font-size: 20px;
             color: var(--accent-blue);
+            flex-shrink: 0;
         }
 
         .cmd-input {
@@ -413,10 +430,38 @@
             font-family: -apple-system, BlinkMacSystemFont, 'Google Sans', 'Segoe UI', Roboto, monospace;
             font-size: 16px;
             color: var(--text-primary);
+            min-width: 0;
         }
 
         .cmd-input::placeholder {
             color: var(--text-secondary);
+        }
+
+        .send-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            background: var(--accent-blue);
+            border: none;
+            color: white;
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            flex-shrink: 0;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .send-btn:active {
+            transform: scale(0.9);
+            background: var(--accent-purple);
+        }
+
+        .send-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
         }
 
         .cmd-hint {
@@ -439,6 +484,7 @@
             align-items: flex-end;
             justify-content: center;
             backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
         }
 
         .modal-overlay.active {
@@ -450,9 +496,10 @@
             border-radius: 24px 24px 0 0;
             width: 100%;
             max-width: 600px;
-            max-height: 80vh;
+            max-height: 85vh;
             overflow-y: auto;
             padding: 24px;
+            padding-bottom: calc(env(safe-area-inset-bottom) + 24px);
             transform: translateY(100%);
             transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
@@ -474,9 +521,16 @@
         }
 
         .close-btn {
-            font-size: 28px;
+            font-size: 32px;
             cursor: pointer;
             color: var(--text-secondary);
+            line-height: 1;
+            padding: 0;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .close-btn:active {
+            transform: scale(0.9);
         }
 
         .settings-group {
@@ -501,6 +555,7 @@
             border: 1px solid var(--border-color);
             border-radius: 12px;
             margin-bottom: 8px;
+            -webkit-tap-highlight-color: transparent;
         }
 
         .setting-label {
@@ -516,6 +571,11 @@
             position: relative;
             cursor: pointer;
             transition: background 0.3s;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .toggle-switch:active {
+            transform: scale(0.95);
         }
 
         .toggle-switch.active {
@@ -554,6 +614,11 @@
             font-size: 14px;
             font-weight: 600;
             transition: all 0.2s;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .lang-btn:active {
+            transform: scale(0.95);
         }
 
         .lang-btn.active {
@@ -562,7 +627,7 @@
             border-color: var(--accent-blue);
         }
 
-        /* Calendar Modal */
+        /* Calendar */
         .calendar-container {
             background: var(--bg-secondary);
             border: 1px solid var(--border-color);
@@ -589,16 +654,22 @@
         }
 
         .calendar-nav-btn {
-            width: 32px;
-            height: 32px;
-            border-radius: 8px;
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
             background: var(--bg-primary);
             border: 1px solid var(--border-color);
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            font-size: 16px;
+            font-size: 18px;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .calendar-nav-btn:active {
+            transform: scale(0.9);
+            background: var(--bg-tertiary);
         }
 
         .calendar-grid {
@@ -625,9 +696,11 @@
             cursor: pointer;
             transition: all 0.2s;
             position: relative;
+            -webkit-tap-highlight-color: transparent;
         }
 
-        .calendar-day:hover {
+        .calendar-day:active {
+            transform: scale(0.9);
             background: var(--bg-tertiary);
         }
 
@@ -652,21 +725,6 @@
             opacity: 0.4;
         }
 
-        /* AI Banner */
-        .ai-banner {
-            margin: 20px;
-            background: var(--gradient-primary);
-            color: white;
-            padding: 20px;
-            border-radius: 16px;
-            text-align: center;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-        }
-
         /* Animations */
         @keyframes slideUp {
             from {
@@ -683,17 +741,27 @@
             animation: slideUp 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        @keyframes pulse {
-            0%, 100% {
-                transform: scale(1);
+        /* Mobile optimizations */
+        @media (max-width: 600px) {
+            .app-container {
+                padding-bottom: 150px;
             }
-            50% {
-                transform: scale(1.05);
+            
+            .cmd-container {
+                padding: 12px 16px calc(env(safe-area-inset-bottom) + 12px);
             }
-        }
-
-        .task-checkbox:active {
-            animation: pulse 0.3s;
+            
+            .header {
+                padding: 14px 16px;
+            }
+            
+            .today-section {
+                padding: 20px 16px;
+            }
+            
+            .tasks-section {
+                padding: 16px;
+            }
         }
     </style>
 </head>
@@ -754,12 +822,6 @@
             <div id="tasksList"></div>
         </div>
 
-        <!-- AI Banner -->
-        <div class="ai-banner">
-            <span>✨</span>
-            <span id="aiBannerText">AI Review Coming Soon</span>
-        </div>
-
         <!-- Command Line -->
         <div class="cmd-container">
             <div class="cmd-input-wrapper">
@@ -768,12 +830,13 @@
                     type="text" 
                     class="cmd-input" 
                     id="cmdInput" 
-                    placeholder="Type your task or search..."
+                    placeholder="Type your task..."
                     autocomplete="off"
                 >
+                <button class="send-btn" id="sendBtn">➤</button>
             </div>
             <div class="cmd-hint" id="cmdHint">
-                Example: mon gym | daily read | weekly review
+                mon gym | daily read | weekly review
             </div>
         </div>
     </div>
@@ -851,7 +914,6 @@
         };
 
         const currentDay = days[now.getDay()];
-        const currentDayName = dayNames.en[now.getDay()];
         const currentDate = now.getDate();
         const currentMonth = now.getMonth();
         const currentYear = now.getFullYear();
@@ -862,15 +924,16 @@
         let currentTheme = localStorage.getItem('theme') || 'light';
         let currentFilter = 'all';
         let calendarDate = new Date(currentYear, currentMonth, 1);
+        let draggedTask = null;
 
         // Translations
         const translations = {
             en: {
                 title: 'Your Tasks',
-                placeholder: 'Type your task or search...',
-                hint: 'Example: mon gym | daily read | weekly review',
+                placeholder: 'Type your task...',
+                hint: 'mon gym | daily read | weekly review',
                 empty: 'No tasks yet',
-                emptyDesc: 'Start typing in the command line below',
+                emptyDesc: 'Start typing below',
                 settings: 'Settings',
                 appearance: 'Appearance',
                 darkMode: 'Dark Mode',
@@ -883,15 +946,14 @@
                 all: 'All',
                 week: 'This Week',
                 completed: 'Completed',
-                aiBanner: 'AI Review Coming Soon',
                 selectedDate: 'Selected Date Tasks:'
             },
             ru: {
                 title: 'Ваши задачи',
-                placeholder: 'Введите задачу или поиск...',
-                hint: 'Пример: mon спортзал | daily чтение | weekly обзор',
+                placeholder: 'Введите задачу...',
+                hint: 'mon спортзал | daily чтение | weekly обзор',
                 empty: 'Пока нет задач',
-                emptyDesc: 'Начните вводить в командной строке ниже',
+                emptyDesc: 'Начните вводить ниже',
                 settings: 'Настройки',
                 appearance: 'Внешний вид',
                 darkMode: 'Темная тема',
@@ -904,7 +966,6 @@
                 all: 'Все',
                 week: 'Неделя',
                 completed: 'Завершено',
-                aiBanner: 'AI Обзор скоро',
                 selectedDate: 'Задачи на выбранную дату:'
             }
         };
@@ -922,14 +983,31 @@
         setupCalendar();
 
         // Event Listeners
-        document.getElementById('cmdInput').addEventListener('keypress', (e) => {
+        const cmdInput = document.getElementById('cmdInput');
+        const sendBtn = document.getElementById('sendBtn');
+
+        function handleSubmit() {
+            const value = cmdInput.value.trim();
+            if (value) {
+                handleCommand(value);
+                cmdInput.value = '';
+            }
+        }
+
+        sendBtn.addEventListener('click', handleSubmit);
+        sendBtn.addEventListener('touchend', (e) => {
+            e.preventDefault();
+            handleSubmit();
+        });
+
+        cmdInput.addEventListener('keypress', (e) => {
             if (e.key === 'Enter') {
-                handleCommand(e.target.value.trim());
-                e.target.value = '';
+                e.preventDefault();
+                handleSubmit();
             }
         });
 
-        document.getElementById('cmdInput').addEventListener('input', (e) => {
+        cmdInput.addEventListener('input', (e) => {
             const value = e.target.value.trim();
             if (value.length > 2 && !value.includes(' ')) {
                 handleSearch(value);
@@ -938,11 +1016,13 @@
             }
         });
 
-        document.getElementById('settingsBtn').addEventListener('click', () => {
+        document.getElementById('settingsBtn').addEventListener('click', (e) => {
+            e.stopPropagation();
             document.getElementById('settingsModal').classList.add('active');
         });
 
-        document.getElementById('closeSettings').addEventListener('click', () => {
+        document.getElementById('closeSettings').addEventListener('click', (e) => {
+            e.stopPropagation();
             document.getElementById('settingsModal').classList.remove('active');
         });
 
@@ -952,12 +1032,14 @@
             }
         });
 
-        document.getElementById('calendarBtn').addEventListener('click', () => {
+        document.getElementById('calendarBtn').addEventListener('click', (e) => {
+            e.stopPropagation();
             document.getElementById('calendarModal').classList.add('active');
             renderCalendar();
         });
 
-        document.getElementById('closeCalendar').addEventListener('click', () => {
+        document.getElementById('closeCalendar').addEventListener('click', (e) => {
+            e.stopPropagation();
             document.getElementById('calendarModal').classList.remove('active');
         });
 
@@ -1042,7 +1124,6 @@
 
             if (taskText.length === 0) return;
 
-            // Auto-add current day if no day/frequency specified
             if (taskModules.length === 0) {
                 taskModules.push(currentDay);
             }
@@ -1110,7 +1191,8 @@
                     : task.modules;
 
                 return `
-                    <div class="task-item">
+                    <div class="task-item" draggable="true" data-id="${task.id}">
+                        <div class="drag-handle">⋮⋮</div>
                         <div class="task-checkbox ${task.completed ? 'checked' : ''}" onclick="toggleTask(${task.id})"></div>
                         <div class="task-content">
                             <div class="task-text ${task.completed ? 'completed' : ''}">${task.text}</div>
@@ -1124,6 +1206,74 @@
                     </div>
                 `;
             }).join('');
+
+            setupDragAndDrop();
+        }
+
+        function setupDragAndDrop() {
+            const taskItems = document.querySelectorAll('.task-item');
+            
+            taskItems.forEach(item => {
+                item.addEventListener('dragstart', handleDragStart);
+                item.addEventListener('dragend', handleDragEnd);
+                item.addEventListener('dragover', handleDragOver);
+                item.addEventListener('drop', handleDrop);
+                item.addEventListener('dragleave', handleDragLeave);
+            });
+        }
+
+        function handleDragStart(e) {
+            draggedTask = this;
+            this.classList.add('dragging');
+            e.dataTransfer.effectAllowed = 'move';
+            e.dataTransfer.setData('text/html', this.innerHTML);
+        }
+
+        function handleDragEnd(e) {
+            this.classList.remove('dragging');
+            document.querySelectorAll('.task-item').forEach(item => {
+                item.classList.remove('drag-over');
+            });
+        }
+
+        function handleDragOver(e) {
+            if (e.preventDefault) {
+                e.preventDefault();
+            }
+            e.dataTransfer.dropEffect = 'move';
+            
+            if (this !== draggedTask) {
+                this.classList.add('drag-over');
+            }
+            
+            return false;
+        }
+
+        function handleDragLeave(e) {
+            this.classList.remove('drag-over');
+        }
+
+        function handleDrop(e) {
+            if (e.stopPropagation) {
+                e.stopPropagation();
+            }
+            
+            if (draggedTask !== this) {
+                const draggedId = parseInt(draggedTask.dataset.id);
+                const targetId = parseInt(this.dataset.id);
+                
+                const draggedIndex = tasks.findIndex(t => t.id === draggedId);
+                const targetIndex = tasks.findIndex(t => t.id === targetId);
+                
+                if (draggedIndex !== -1 && targetIndex !== -1) {
+                    const [removed] = tasks.splice(draggedIndex, 1);
+                    tasks.splice(targetIndex, 0, removed);
+                    saveTasks();
+                    renderTasks();
+                }
+            }
+            
+            return false;
         }
 
         function toggleTask(id) {
@@ -1173,7 +1323,6 @@
             document.getElementById('darkModeLabel').textContent = translations[currentLang].darkMode;
             document.getElementById('languageTitle').textContent = translations[currentLang].language;
             document.getElementById('calendarTitle').textContent = translations[currentLang].calendar;
-            document.getElementById('aiBannerText').textContent = translations[currentLang].aiBanner;
             document.getElementById('selectedDateLabel').textContent = translations[currentLang].selectedDate;
             
             document.querySelectorAll('.filter-chip').forEach((chip, idx) => {
@@ -1202,7 +1351,6 @@
             const grid = document.getElementById('calendarGrid');
             grid.innerHTML = '';
             
-            // Day names
             const dayNamesShort = currentLang === 'en' 
                 ? ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
                 : ['Вс', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб'];
@@ -1214,7 +1362,6 @@
                 grid.appendChild(dayName);
             });
             
-            // Previous month days
             for (let i = firstDay - 1; i >= 0; i--) {
                 const day = document.createElement('div');
                 day.className = 'calendar-day other-month';
@@ -1222,7 +1369,6 @@
                 grid.appendChild(day);
             }
             
-            // Current month days
             for (let i = 1; i <= daysInMonth; i++) {
                 const day = document.createElement('div');
                 day.className = 'calendar-day';
@@ -1232,7 +1378,6 @@
                     day.classList.add('today');
                 }
                 
-                // Check if day has tasks
                 const dayName = days[new Date(year, month, i).getDay()];
                 const hasTasks = tasks.some(t => t.modules.includes(dayName));
                 if (hasTasks) {
@@ -1244,7 +1389,6 @@
                 grid.appendChild(day);
             }
             
-            // Next month days
             const totalCells = firstDay + daysInMonth;
             const remainingCells = 42 - totalCells;
             for (let i = 1; i <= remainingCells; i++) {
