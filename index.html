@@ -14,32 +14,47 @@
 
         :root {
             --bg-primary: #FFFFFF;
-            --bg-secondary: #F8F9FA;
-            --bg-tertiary: #F0F0F0;
+            --bg-secondary: rgba(248, 249, 250, 0.7);
+            --bg-tertiary: rgba(240, 240, 240, 0.5);
+            --glass-bg: rgba(255, 255, 255, 0.7);
+            --glass-border: rgba(255, 255, 255, 0.3);
             --text-primary: #000000;
             --text-secondary: #666666;
             --text-tertiary: #999999;
             --accent-blue: #00B8D4;
             --accent-green: #00E676;
             --accent-purple: #7C4DFF;
-            --border-color: #E0E0E0;
-            --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.06);
-            --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.08);
-            --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.12);
+            --border-color: rgba(0, 0, 0, 0.1);
+            --shadow-sm: 0 4px 16px rgba(0, 0, 0, 0.08);
+            --shadow-md: 0 8px 32px rgba(0, 0, 0, 0.12);
+            --shadow-lg: 0 16px 48px rgba(0, 0, 0, 0.16);
             --gradient-primary: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+            --blur-amount: 20px;
         }
 
         [data-theme="dark"] {
             --bg-primary: #000000;
-            --bg-secondary: #0A0A0A;
-            --bg-tertiary: #1A1A1A;
+            --bg-secondary: rgba(10, 10, 10, 0.7);
+            --bg-tertiary: rgba(26, 26, 26, 0.5);
+            --glass-bg: rgba(20, 20, 20, 0.7);
+            --glass-border: rgba(255, 255, 255, 0.1);
             --text-primary: #FFFFFF;
             --text-secondary: #AAAAAA;
             --text-tertiary: #666666;
-            --border-color: #2A2A2A;
-            --shadow-sm: 0 2px 8px rgba(255, 255, 255, 0.03);
-            --shadow-md: 0 4px 16px rgba(255, 255, 255, 0.05);
-            --shadow-lg: 0 8px 24px rgba(255, 255, 255, 0.08);
+            --border-color: rgba(255, 255, 255, 0.1);
+            --shadow-sm: 0 4px 16px rgba(0, 0, 0, 0.3);
+            --shadow-md: 0 8px 32px rgba(0, 0, 0, 0.4);
+            --shadow-lg: 0 16px 48px rgba(0, 0, 0, 0.5);
+        }
+
+        [data-glass="tinted"] {
+            --glass-bg: rgba(0, 184, 212, 0.1);
+            --glass-border: rgba(0, 184, 212, 0.2);
+        }
+
+        [data-theme="dark"][data-glass="tinted"] {
+            --glass-bg: rgba(0, 184, 212, 0.15);
+            --glass-border: rgba(0, 184, 212, 0.25);
         }
 
         body {
@@ -47,10 +62,18 @@
             background: var(--bg-primary);
             color: var(--text-primary);
             overflow-x: hidden;
-            transition: background 0.3s cubic-bezier(0.4, 0, 0.2, 1), color 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: background 0.5s cubic-bezier(0.4, 0, 0.2, 1);
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
-            touch-action: pan-y;
+        }
+
+        /* Liquid Glass Effect */
+        .glass {
+            background: var(--glass-bg);
+            backdrop-filter: blur(var(--blur-amount));
+            -webkit-backdrop-filter: blur(var(--blur-amount));
+            border: 1px solid var(--glass-border);
+            box-shadow: var(--shadow-sm);
         }
 
         .app-container {
@@ -65,12 +88,13 @@
         .header {
             position: sticky;
             top: 0;
-            background: var(--bg-primary);
+            background: var(--glass-bg);
+            backdrop-filter: blur(var(--blur-amount));
+            -webkit-backdrop-filter: blur(var(--blur-amount));
             z-index: 100;
             padding: 16px 20px;
-            border-bottom: 1px solid var(--border-color);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--glass-border);
+            box-shadow: var(--shadow-sm);
         }
 
         .header-content {
@@ -80,68 +104,77 @@
         }
 
         .logo {
-            font-size: 26px;
+            font-size: 28px;
             font-weight: 700;
             letter-spacing: -0.5px;
             background: var(--gradient-primary);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
+            filter: drop-shadow(0 2px 4px rgba(0, 184, 212, 0.3));
         }
 
         .header-actions {
             display: flex;
-            gap: 8px;
+            gap: 10px;
         }
 
         .icon-btn {
-            width: 44px;
-            height: 44px;
-            border-radius: 12px;
-            background: var(--bg-secondary);
-            border: 1px solid var(--border-color);
+            width: 48px;
+            height: 48px;
+            border-radius: 16px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(var(--blur-amount));
+            -webkit-backdrop-filter: blur(var(--blur-amount));
+            border: 1px solid var(--glass-border);
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            font-size: 20px;
-            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            font-size: 22px;
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
             -webkit-tap-highlight-color: transparent;
+            box-shadow: var(--shadow-sm);
         }
 
         .icon-btn:active {
-            transform: scale(0.95);
-            background: var(--bg-tertiary);
+            transform: scale(0.85);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        .icon-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
         }
 
         /* Today Section */
         .today-section {
             padding: 24px 20px;
-            background: var(--bg-secondary);
-            border-bottom: 1px solid var(--border-color);
+            background: var(--glass-bg);
+            backdrop-filter: blur(var(--blur-amount));
+            -webkit-backdrop-filter: blur(var(--blur-amount));
+            border-bottom: 1px solid var(--glass-border);
+            margin: 12px;
+            border-radius: 24px;
+            box-shadow: var(--shadow-sm);
         }
 
         .today-header {
             display: flex;
             align-items: center;
             gap: 12px;
-            margin-bottom: 8px;
+            margin-bottom: 12px;
         }
 
         .today-date {
-            font-size: 32px;
-            font-weight: 700;
-            letter-spacing: -1px;
+            font-size: 42px;
+            font-weight: 800;
+            letter-spacing: -2px;
             background: var(--gradient-primary);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-        }
-
-        .today-day {
-            font-size: 16px;
-            color: var(--text-secondary);
-            font-weight: 500;
+            filter: drop-shadow(0 2px 8px rgba(0, 184, 212, 0.3));
         }
 
         .productivity-stats {
@@ -152,17 +185,29 @@
 
         .stat-card {
             flex: 1;
-            background: var(--bg-primary);
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
-            padding: 12px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(var(--blur-amount));
+            -webkit-backdrop-filter: blur(var(--blur-amount));
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            padding: 14px;
             text-align: center;
+            box-shadow: var(--shadow-sm);
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .stat-card:active {
+            transform: scale(0.95);
         }
 
         .stat-value {
-            font-size: 24px;
+            font-size: 26px;
             font-weight: 700;
             margin-bottom: 4px;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
 
         .stat-label {
@@ -170,6 +215,7 @@
             color: var(--text-secondary);
             text-transform: uppercase;
             letter-spacing: 0.5px;
+            font-weight: 600;
         }
 
         /* Tasks Section */
@@ -178,25 +224,12 @@
             padding: 20px;
         }
 
-        .section-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 16px;
-        }
-
-        .section-title {
-            font-size: 18px;
-            font-weight: 600;
-            color: var(--text-primary);
-        }
-
         .filter-chips {
             display: flex;
-            gap: 8px;
+            gap: 10px;
             overflow-x: auto;
             padding-bottom: 4px;
-            margin-bottom: 16px;
+            margin-bottom: 20px;
             -webkit-overflow-scrolling: touch;
         }
 
@@ -205,55 +238,60 @@
         }
 
         .filter-chip {
-            padding: 8px 16px;
-            border-radius: 20px;
-            background: var(--bg-secondary);
-            border: 1px solid var(--border-color);
+            padding: 10px 18px;
+            border-radius: 16px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(var(--blur-amount));
+            -webkit-backdrop-filter: blur(var(--blur-amount));
+            border: 1px solid var(--glass-border);
             font-size: 13px;
-            font-weight: 500;
+            font-weight: 600;
             white-space: nowrap;
             cursor: pointer;
-            transition: all 0.2s;
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
             -webkit-tap-highlight-color: transparent;
+            box-shadow: var(--shadow-sm);
         }
 
         .filter-chip:active {
-            transform: scale(0.95);
+            transform: scale(0.9);
         }
 
         .filter-chip.active {
-            background: var(--accent-blue);
+            background: var(--gradient-primary);
             color: white;
-            border-color: var(--accent-blue);
+            border-color: transparent;
+            box-shadow: 0 4px 16px rgba(0, 184, 212, 0.4);
         }
 
         .task-item {
-            background: var(--bg-secondary);
-            border: 1px solid var(--border-color);
-            border-radius: 16px;
-            padding: 16px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(var(--blur-amount));
+            -webkit-backdrop-filter: blur(var(--blur-amount));
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 18px;
             margin-bottom: 12px;
             display: flex;
             align-items: flex-start;
             gap: 12px;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
             cursor: move;
             position: relative;
             overflow: hidden;
             -webkit-tap-highlight-color: transparent;
             user-select: none;
-            -webkit-user-select: none;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .task-item:active {
+            transform: scale(0.98) translateY(2px);
         }
 
         .task-item.dragging {
-            opacity: 0.5;
-            transform: scale(0.95);
-        }
-
-        .task-item.drag-over {
-            border-color: var(--accent-blue);
-            border-width: 2px;
-            padding: 15px;
+            opacity: 0.6;
+            transform: scale(1.05) rotate(2deg);
+            box-shadow: var(--shadow-lg);
         }
 
         .task-item::before {
@@ -263,12 +301,13 @@
             top: 0;
             bottom: 0;
             width: 4px;
-            background: var(--accent-blue);
+            background: var(--gradient-primary);
             opacity: 0;
-            transition: opacity 0.3s;
+            transition: opacity 0.4s;
+            border-radius: 20px 0 0 20px;
         }
 
-        .task-item:active::before {
+        .task-item:hover::before {
             opacity: 1;
         }
 
@@ -278,33 +317,45 @@
             cursor: move;
             padding: 4px;
             margin-left: -4px;
+            opacity: 0.6;
+            transition: opacity 0.3s;
+        }
+
+        .task-item:hover .drag-handle {
+            opacity: 1;
         }
 
         .task-checkbox {
-            width: 24px;
-            height: 24px;
-            border: 2px solid var(--accent-blue);
-            border-radius: 8px;
+            width: 26px;
+            height: 26px;
+            border: 2.5px solid var(--accent-blue);
+            border-radius: 10px;
             cursor: pointer;
             flex-shrink: 0;
             margin-top: 2px;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
             display: flex;
             align-items: center;
             justify-content: center;
             -webkit-tap-highlight-color: transparent;
+            background: var(--glass-bg);
+        }
+
+        .task-checkbox:active {
+            transform: scale(0.85);
         }
 
         .task-checkbox.checked {
             background: var(--accent-green);
             border-color: var(--accent-green);
+            box-shadow: 0 0 12px rgba(0, 230, 118, 0.5);
         }
 
         .task-checkbox.checked::after {
             content: '✓';
             color: white;
-            font-size: 14px;
-            font-weight: 700;
+            font-size: 15px;
+            font-weight: 800;
         }
 
         .task-content {
@@ -314,7 +365,7 @@
 
         .task-text {
             font-size: 15px;
-            line-height: 1.5;
+            line-height: 1.6;
             color: var(--text-primary);
             word-wrap: break-word;
             font-weight: 500;
@@ -329,38 +380,51 @@
         .task-meta {
             display: flex;
             gap: 6px;
-            margin-top: 8px;
+            margin-top: 10px;
             flex-wrap: wrap;
         }
 
         .task-tag {
             font-size: 11px;
-            padding: 4px 10px;
-            border-radius: 8px;
-            font-weight: 600;
+            padding: 5px 12px;
+            border-radius: 10px;
+            font-weight: 700;
             text-transform: uppercase;
-            letter-spacing: 0.3px;
+            letter-spacing: 0.4px;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
         }
 
-        .task-tag.today { background: rgba(0, 230, 118, 0.15); color: var(--accent-green); }
-        .task-tag.mon { background: rgba(0, 184, 212, 0.15); color: var(--accent-blue); }
-        .task-tag.tue { background: rgba(0, 184, 212, 0.15); color: var(--accent-blue); }
-        .task-tag.wed { background: rgba(0, 184, 212, 0.15); color: var(--accent-blue); }
-        .task-tag.thu { background: rgba(0, 184, 212, 0.15); color: var(--accent-blue); }
-        .task-tag.fri { background: rgba(0, 184, 212, 0.15); color: var(--accent-blue); }
-        .task-tag.sat { background: rgba(124, 77, 255, 0.15); color: var(--accent-purple); }
-        .task-tag.sun { background: rgba(124, 77, 255, 0.15); color: var(--accent-purple); }
-        .task-tag.daily { background: rgba(0, 230, 118, 0.15); color: var(--accent-green); }
-        .task-tag.weekly { background: rgba(0, 230, 118, 0.15); color: var(--accent-green); }
-        .task-tag.monthly { background: rgba(0, 230, 118, 0.15); color: var(--accent-green); }
+        .task-tag.today { background: rgba(0, 230, 118, 0.2); color: var(--accent-green); border: 1px solid rgba(0, 230, 118, 0.3); }
+        .task-tag.mon, .task-tag.tue, .task-tag.wed, .task-tag.thu, .task-tag.fri { 
+            background: rgba(0, 184, 212, 0.2); 
+            color: var(--accent-blue); 
+            border: 1px solid rgba(0, 184, 212, 0.3); 
+        }
+        .task-tag.sat, .task-tag.sun { 
+            background: rgba(124, 77, 255, 0.2); 
+            color: var(--accent-purple); 
+            border: 1px solid rgba(124, 77, 255, 0.3); 
+        }
+        .task-tag.daily, .task-tag.weekly, .task-tag.monthly { 
+            background: rgba(0, 230, 118, 0.2); 
+            color: var(--accent-green); 
+            border: 1px solid rgba(0, 230, 118, 0.3); 
+        }
 
         .delete-btn {
             color: #FF5252;
-            font-size: 20px;
+            font-size: 22px;
             cursor: pointer;
             padding: 4px 8px;
-            transition: opacity 0.2s;
+            transition: all 0.3s;
             -webkit-tap-highlight-color: transparent;
+            border-radius: 8px;
+        }
+
+        .delete-btn:active {
+            transform: scale(0.8);
+            background: rgba(255, 82, 82, 0.1);
         }
 
         .empty-state {
@@ -369,56 +433,53 @@
         }
 
         .empty-icon {
-            font-size: 64px;
-            margin-bottom: 16px;
-            opacity: 0.3;
+            font-size: 72px;
+            margin-bottom: 20px;
+            opacity: 0.4;
+            filter: grayscale(0.3);
         }
 
-        .empty-text {
-            font-size: 16px;
-            color: var(--text-secondary);
-            margin-bottom: 8px;
-        }
-
-        .empty-hint {
-            font-size: 14px;
-            color: var(--text-tertiary);
-        }
-
-        /* Command Line - Fixed at Bottom */
+        /* Command Line */
         .cmd-container {
             position: fixed;
             bottom: 0;
             left: 0;
             right: 0;
-            background: var(--bg-primary);
-            border-top: 1px solid var(--border-color);
+            background: var(--glass-bg);
+            backdrop-filter: blur(var(--blur-amount));
+            -webkit-backdrop-filter: blur(var(--blur-amount));
+            border-top: 1px solid var(--glass-border);
             padding: 16px 20px calc(env(safe-area-inset-bottom) + 16px);
             z-index: 200;
-            box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.1);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
+            box-shadow: 0 -8px 32px rgba(0, 0, 0, 0.1);
         }
 
         .cmd-input-wrapper {
-            background: var(--bg-secondary);
-            border: 2px solid var(--border-color);
-            border-radius: 16px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 2px solid var(--glass-border);
+            border-radius: 20px;
             padding: 12px 14px;
             display: flex;
             align-items: center;
             gap: 10px;
-            transition: all 0.3s;
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            box-shadow: var(--shadow-sm);
         }
 
         .cmd-input-wrapper:focus-within {
             border-color: var(--accent-blue);
-            box-shadow: 0 0 0 4px rgba(0, 184, 212, 0.1);
+            box-shadow: 0 0 0 6px rgba(0, 184, 212, 0.15), var(--shadow-md);
+            transform: translateY(-2px);
         }
 
         .cmd-icon {
-            font-size: 20px;
-            color: var(--accent-blue);
+            font-size: 22px;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
             flex-shrink: 0;
         }
 
@@ -427,7 +488,7 @@
             background: transparent;
             border: none;
             outline: none;
-            font-family: -apple-system, BlinkMacSystemFont, 'Google Sans', 'Segoe UI', Roboto, monospace;
+            font-family: -apple-system, BlinkMacSystemFont, 'Google Sans', 'Segoe UI', Roboto;
             font-size: 16px;
             color: var(--text-primary);
             min-width: 0;
@@ -438,214 +499,225 @@
         }
 
         .send-btn {
-            width: 36px;
-            height: 36px;
-            border-radius: 10px;
-            background: var(--accent-blue);
+            width: 40px;
+            height: 40px;
+            border-radius: 14px;
+            background: var(--gradient-primary);
             border: none;
             color: white;
-            font-size: 18px;
+            font-size: 20px;
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            transition: all 0.2s;
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
             flex-shrink: 0;
             -webkit-tap-highlight-color: transparent;
+            box-shadow: 0 4px 16px rgba(0, 184, 212, 0.4);
         }
 
         .send-btn:active {
-            transform: scale(0.9);
-            background: var(--accent-purple);
+            transform: scale(0.85) rotate(45deg);
+            box-shadow: 0 2px 8px rgba(0, 184, 212, 0.3);
         }
 
-        .send-btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
+        .send-btn:hover {
+            transform: translateY(-2px) rotate(0deg);
+            box-shadow: 0 8px 24px rgba(0, 184, 212, 0.5);
         }
 
-        .cmd-hint {
-            font-size: 12px;
-            color: var(--text-tertiary);
-            margin-top: 8px;
-            padding-left: 36px;
-        }
-
-        /* Settings Modal */
+        /* Modal - Centered Popup */
         .modal-overlay {
             position: fixed;
             top: 0;
             left: 0;
             right: 0;
             bottom: 0;
-            background: rgba(0, 0, 0, 0.5);
+            background: rgba(0, 0, 0, 0.6);
             z-index: 300;
             display: none;
-            align-items: flex-end;
+            align-items: center;
             justify-content: center;
-            backdrop-filter: blur(4px);
-            -webkit-backdrop-filter: blur(4px);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            padding: 20px;
         }
 
         .modal-overlay.active {
             display: flex;
+            animation: fadeIn 0.3s ease;
         }
 
         .modal-content {
-            background: var(--bg-primary);
-            border-radius: 24px 24px 0 0;
+            background: var(--glass-bg);
+            backdrop-filter: blur(var(--blur-amount));
+            -webkit-backdrop-filter: blur(var(--blur-amount));
+            border: 1px solid var(--glass-border);
+            border-radius: 32px;
             width: 100%;
-            max-width: 600px;
-            max-height: 85vh;
+            max-width: 440px;
+            max-height: 80vh;
             overflow-y: auto;
-            padding: 24px;
-            padding-bottom: calc(env(safe-area-inset-bottom) + 24px);
-            transform: translateY(100%);
-            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            padding: 28px;
+            box-shadow: var(--shadow-lg);
+            transform: scale(0.9) translateY(20px);
+            opacity: 0;
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
 
         .modal-overlay.active .modal-content {
-            transform: translateY(0);
+            transform: scale(1) translateY(0);
+            opacity: 1;
         }
 
         .modal-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 24px;
+            margin-bottom: 28px;
         }
 
         .modal-title {
-            font-size: 24px;
+            font-size: 28px;
             font-weight: 700;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
 
         .close-btn {
-            font-size: 32px;
+            width: 36px;
+            height: 36px;
+            border-radius: 12px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
             cursor: pointer;
             color: var(--text-secondary);
-            line-height: 1;
-            padding: 0;
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
             -webkit-tap-highlight-color: transparent;
         }
 
         .close-btn:active {
-            transform: scale(0.9);
+            transform: scale(0.85) rotate(90deg);
+            background: rgba(255, 82, 82, 0.1);
+            color: #FF5252;
         }
 
         .settings-group {
-            margin-bottom: 32px;
+            margin-bottom: 28px;
         }
 
         .settings-group-title {
-            font-size: 14px;
+            font-size: 13px;
             color: var(--text-secondary);
             text-transform: uppercase;
-            letter-spacing: 0.5px;
-            margin-bottom: 12px;
-            font-weight: 600;
+            letter-spacing: 1px;
+            margin-bottom: 14px;
+            font-weight: 700;
         }
 
         .setting-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 16px;
-            background: var(--bg-secondary);
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
-            margin-bottom: 8px;
-            -webkit-tap-highlight-color: transparent;
+            background: var(--glass-bg);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid var(--glass-border);
+            border-radius: 18px;
+            padding: 18px;
+            margin-bottom: 12px;
+            box-shadow: var(--shadow-sm);
         }
 
         .setting-label {
             font-size: 15px;
-            font-weight: 500;
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: var(--text-primary);
         }
 
-        .toggle-switch {
-            width: 52px;
-            height: 32px;
-            background: var(--border-color);
-            border-radius: 16px;
-            position: relative;
-            cursor: pointer;
-            transition: background 0.3s;
-            -webkit-tap-highlight-color: transparent;
-        }
-
-        .toggle-switch:active {
-            transform: scale(0.95);
-        }
-
-        .toggle-switch.active {
-            background: var(--accent-blue);
-        }
-
-        .toggle-switch::after {
-            content: '';
-            position: absolute;
-            width: 28px;
-            height: 28px;
-            background: white;
-            border-radius: 50%;
-            top: 2px;
-            left: 2px;
-            transition: transform 0.3s;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-        }
-
-        .toggle-switch.active::after {
-            transform: translateX(20px);
-        }
-
-        .lang-selector {
+        /* 3-Way Switch */
+        .triple-switch {
             display: flex;
             gap: 8px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            border-radius: 14px;
+            padding: 4px;
         }
 
-        .lang-btn {
+        .switch-option {
             flex: 1;
-            padding: 12px;
+            padding: 10px;
             border-radius: 10px;
-            background: var(--bg-tertiary);
-            border: 2px solid var(--border-color);
-            cursor: pointer;
-            font-size: 14px;
+            text-align: center;
+            font-size: 13px;
             font-weight: 600;
-            transition: all 0.2s;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
             -webkit-tap-highlight-color: transparent;
+            color: var(--text-secondary);
         }
 
-        .lang-btn:active {
+        .switch-option:active {
             transform: scale(0.95);
         }
 
-        .lang-btn.active {
-            background: var(--accent-blue);
+        .switch-option.active {
+            background: var(--gradient-primary);
             color: white;
-            border-color: var(--accent-blue);
+            box-shadow: 0 4px 12px rgba(0, 184, 212, 0.3);
+        }
+
+        /* 2-Way Switch */
+        .dual-switch {
+            display: flex;
+            gap: 8px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            border-radius: 14px;
+            padding: 4px;
+        }
+
+        .dual-switch .switch-option {
+            flex: 1;
         }
 
         /* Calendar */
         .calendar-container {
-            background: var(--bg-secondary);
-            border: 1px solid var(--border-color);
-            border-radius: 16px;
-            padding: 16px;
-            margin-top: 16px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 20px;
+            margin-top: 20px;
+            box-shadow: var(--shadow-sm);
         }
 
         .calendar-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 16px;
+            margin-bottom: 20px;
         }
 
         .calendar-month {
-            font-size: 16px;
-            font-weight: 600;
+            font-size: 18px;
+            font-weight: 700;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
 
         .calendar-nav {
@@ -654,36 +726,40 @@
         }
 
         .calendar-nav-btn {
-            width: 36px;
-            height: 36px;
-            border-radius: 10px;
-            background: var(--bg-primary);
-            border: 1px solid var(--border-color);
+            width: 38px;
+            height: 38px;
+            border-radius: 12px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
             font-size: 18px;
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
             -webkit-tap-highlight-color: transparent;
+            box-shadow: var(--shadow-sm);
         }
 
         .calendar-nav-btn:active {
-            transform: scale(0.9);
-            background: var(--bg-tertiary);
+            transform: scale(0.85);
         }
 
         .calendar-grid {
             display: grid;
             grid-template-columns: repeat(7, 1fr);
-            gap: 4px;
+            gap: 6px;
         }
 
         .calendar-day-name {
             text-align: center;
             font-size: 11px;
             color: var(--text-secondary);
-            padding: 8px 0;
-            font-weight: 600;
+            padding: 10px 0;
+            font-weight: 700;
+            text-transform: uppercase;
         }
 
         .calendar-day {
@@ -691,41 +767,51 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            border-radius: 8px;
-            font-size: 13px;
+            border-radius: 12px;
+            font-size: 14px;
             cursor: pointer;
-            transition: all 0.2s;
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
             position: relative;
             -webkit-tap-highlight-color: transparent;
+            font-weight: 600;
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
         }
 
         .calendar-day:active {
-            transform: scale(0.9);
-            background: var(--bg-tertiary);
+            transform: scale(0.85);
         }
 
         .calendar-day.today {
-            background: var(--accent-blue);
+            background: var(--gradient-primary);
             color: white;
-            font-weight: 700;
+            font-weight: 800;
+            box-shadow: 0 4px 16px rgba(0, 184, 212, 0.4);
         }
 
         .calendar-day.has-tasks::after {
             content: '';
             position: absolute;
             bottom: 4px;
-            width: 4px;
-            height: 4px;
+            width: 5px;
+            height: 5px;
             background: var(--accent-green);
             border-radius: 50%;
+            box-shadow: 0 0 6px var(--accent-green);
         }
 
         .calendar-day.other-month {
             color: var(--text-tertiary);
-            opacity: 0.4;
+            opacity: 0.3;
         }
 
         /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
         @keyframes slideUp {
             from {
                 opacity: 0;
@@ -737,30 +823,24 @@
             }
         }
 
-        .task-item {
-            animation: slideUp 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
         }
 
-        /* Mobile optimizations */
+        .task-item {
+            animation: slideUp 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        /* Mobile */
         @media (max-width: 600px) {
-            .app-container {
-                padding-bottom: 150px;
+            .modal-content {
+                max-width: 95%;
+                padding: 24px;
             }
             
-            .cmd-container {
-                padding: 12px 16px calc(env(safe-area-inset-bottom) + 12px);
-            }
-            
-            .header {
-                padding: 14px 16px;
-            }
-            
-            .today-section {
-                padding: 20px 16px;
-            }
-            
-            .tasks-section {
-                padding: 16px;
+            .logo {
+                font-size: 24px;
             }
         }
     </style>
@@ -772,8 +852,8 @@
             <div class="header-content">
                 <div class="logo">TaskFlow</div>
                 <div class="header-actions">
-                    <div class="icon-btn" id="calendarBtn">📅</div>
-                    <div class="icon-btn" id="settingsBtn">⚙️</div>
+                    <div class="icon-btn" id="calendarBtn" ontouchend="event.preventDefault(); openCalendar();">📅</div>
+                    <div class="icon-btn" id="settingsBtn" ontouchend="event.preventDefault(); openSettings();">⚙️</div>
                 </div>
             </div>
         </div>
@@ -794,7 +874,7 @@
                 </div>
                 <div class="stat-card">
                     <div class="stat-value" id="statWeek">0</div>
-                    <div class="stat-label">This Week</div>
+                    <div class="stat-label">Week</div>
                 </div>
                 <div class="stat-card">
                     <div class="stat-value" id="statTotal">0</div>
@@ -804,21 +884,17 @@
         </div>
 
         <!-- Filter Chips -->
-        <div style="padding: 16px 20px 0;">
+        <div style="padding: 0 20px;">
             <div class="filter-chips" id="filterChips">
                 <div class="filter-chip active" data-filter="all">All</div>
                 <div class="filter-chip" data-filter="today">Today</div>
-                <div class="filter-chip" data-filter="week">This Week</div>
-                <div class="filter-chip" data-filter="completed">Completed</div>
+                <div class="filter-chip" data-filter="week">Week</div>
+                <div class="filter-chip" data-filter="completed">Done</div>
             </div>
         </div>
 
         <!-- Tasks Section -->
         <div class="tasks-section">
-            <div class="section-header">
-                <div class="section-title" id="sectionTitle">Your Tasks</div>
-                <div style="font-size: 14px; color: var(--text-secondary);" id="taskCount">0 tasks</div>
-            </div>
             <div id="tasksList"></div>
         </div>
 
@@ -830,39 +906,48 @@
                     type="text" 
                     class="cmd-input" 
                     id="cmdInput" 
-                    placeholder="Type your task..."
+                    placeholder="Add task..."
                     autocomplete="off"
                 >
-                <button class="send-btn" id="sendBtn">➤</button>
-            </div>
-            <div class="cmd-hint" id="cmdHint">
-                mon gym | daily read | weekly review
+                <button class="send-btn" id="sendBtn" ontouchend="event.preventDefault(); handleSubmit();">➤</button>
             </div>
         </div>
     </div>
 
     <!-- Settings Modal -->
-    <div class="modal-overlay" id="settingsModal">
+    <div class="modal-overlay" id="settingsModal" onclick="if(event.target === this) closeSettings();">
         <div class="modal-content">
             <div class="modal-header">
-                <div class="modal-title" id="modalTitle">Settings</div>
-                <div class="close-btn" id="closeSettings">×</div>
+                <div class="modal-title">Settings</div>
+                <div class="close-btn" ontouchend="event.preventDefault(); closeSettings();">×</div>
             </div>
 
             <div class="settings-group">
-                <div class="settings-group-title" id="appearanceTitle">Appearance</div>
+                <div class="settings-group-title">APPEARANCE</div>
+                
                 <div class="setting-item">
-                    <div class="setting-label" id="darkModeLabel">Dark Mode</div>
-                    <div class="toggle-switch" id="themeToggle"></div>
+                    <div class="setting-label">Theme</div>
+                    <div class="dual-switch" id="themeSwitch">
+                        <div class="switch-option active" data-theme="light">Light</div>
+                        <div class="switch-option" data-theme="dark">Dark</div>
+                    </div>
+                </div>
+
+                <div class="setting-item">
+                    <div class="setting-label">Glass Style</div>
+                    <div class="dual-switch" id="glassSwitch">
+                        <div class="switch-option active" data-glass="clear">Clear</div>
+                        <div class="switch-option" data-glass="tinted">Tinted</div>
+                    </div>
                 </div>
             </div>
 
             <div class="settings-group">
-                <div class="settings-group-title" id="languageTitle">Language</div>
+                <div class="settings-group-title">LANGUAGE</div>
                 <div class="setting-item">
-                    <div class="lang-selector">
-                        <div class="lang-btn active" data-lang="en">English</div>
-                        <div class="lang-btn" data-lang="ru">Русский</div>
+                    <div class="dual-switch" id="langSwitch">
+                        <div class="switch-option active" data-lang="en">English</div>
+                        <div class="switch-option" data-lang="ru">Русский</div>
                     </div>
                 </div>
             </div>
@@ -870,38 +955,36 @@
     </div>
 
     <!-- Calendar Modal -->
-    <div class="modal-overlay" id="calendarModal">
+    <div class="modal-overlay" id="calendarModal" onclick="if(event.target === this) closeCalendar();">
         <div class="modal-content">
             <div class="modal-header">
-                <div class="modal-title" id="calendarTitle">Calendar</div>
-                <div class="close-btn" id="closeCalendar">×</div>
+                <div class="modal-title">Calendar</div>
+                <div class="close-btn" ontouchend="event.preventDefault(); closeCalendar();">×</div>
             </div>
 
             <div class="calendar-container">
                 <div class="calendar-header">
                     <div class="calendar-month" id="calendarMonth">February 2026</div>
                     <div class="calendar-nav">
-                        <div class="calendar-nav-btn" id="prevMonth">‹</div>
-                        <div class="calendar-nav-btn" id="nextMonth">›</div>
+                        <div class="calendar-nav-btn" ontouchend="event.preventDefault(); prevMonth();">‹</div>
+                        <div class="calendar-nav-btn" ontouchend="event.preventDefault(); nextMonth();">›</div>
                     </div>
                 </div>
                 <div class="calendar-grid" id="calendarGrid"></div>
             </div>
 
-            <div style="margin-top: 16px; padding: 16px; background: var(--bg-secondary); border-radius: 12px;">
-                <div style="font-size: 14px; color: var(--text-secondary); margin-bottom: 8px;" id="selectedDateLabel">Selected Date Tasks:</div>
+            <div style="margin-top: 20px; padding: 18px; background: var(--glass-bg); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); border: 1px solid var(--glass-border); border-radius: 18px;">
+                <div style="font-size: 13px; color: var(--text-secondary); margin-bottom: 12px; font-weight: 700; text-transform: uppercase;" id="selectedDateLabel">Selected Tasks:</div>
                 <div id="dateTasksList"></div>
             </div>
         </div>
     </div>
 
     <script>
-        // Initialize Telegram WebApp
         const tg = window.Telegram.WebApp;
         tg.ready();
         tg.expand();
 
-        // Get current date info
         const now = new Date();
         const days = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'];
         const dayNames = {
@@ -918,55 +1001,46 @@
         const currentMonth = now.getMonth();
         const currentYear = now.getFullYear();
 
-        // State
         let tasks = JSON.parse(localStorage.getItem('tasks') || '[]');
         let currentLang = localStorage.getItem('lang') || 'en';
         let currentTheme = localStorage.getItem('theme') || 'light';
+        let currentGlass = localStorage.getItem('glass') || 'clear';
         let currentFilter = 'all';
         let calendarDate = new Date(currentYear, currentMonth, 1);
         let draggedTask = null;
 
-        // Translations
         const translations = {
             en: {
-                title: 'Your Tasks',
-                placeholder: 'Type your task...',
-                hint: 'mon gym | daily read | weekly review',
+                placeholder: 'Add task...',
                 empty: 'No tasks yet',
-                emptyDesc: 'Start typing below',
+                emptyDesc: 'Start adding tasks below',
                 settings: 'Settings',
-                appearance: 'Appearance',
-                darkMode: 'Dark Mode',
-                language: 'Language',
+                appearance: 'APPEARANCE',
+                theme: 'Theme',
+                glassStyle: 'Glass Style',
+                language: 'LANGUAGE',
                 calendar: 'Calendar',
-                tasks: 'tasks',
-                today: 'Today',
-                thisWeek: 'This Week',
-                total: 'Total',
-                all: 'All',
-                week: 'This Week',
-                completed: 'Completed',
-                selectedDate: 'Selected Date Tasks:'
+                selectedDate: 'Selected Tasks:',
+                light: 'Light',
+                dark: 'Dark',
+                clear: 'Clear',
+                tinted: 'Tinted'
             },
             ru: {
-                title: 'Ваши задачи',
-                placeholder: 'Введите задачу...',
-                hint: 'mon спортзал | daily чтение | weekly обзор',
+                placeholder: 'Добавить задачу...',
                 empty: 'Пока нет задач',
-                emptyDesc: 'Начните вводить ниже',
+                emptyDesc: 'Начните добавлять задачи ниже',
                 settings: 'Настройки',
-                appearance: 'Внешний вид',
-                darkMode: 'Темная тема',
-                language: 'Язык',
+                appearance: 'ВНЕШНИЙ ВИД',
+                theme: 'Тема',
+                glassStyle: 'Стиль Glass',
+                language: 'ЯЗЫК',
                 calendar: 'Календарь',
-                tasks: 'задач',
-                today: 'Сегодня',
-                thisWeek: 'На этой неделе',
-                total: 'Всего',
-                all: 'Все',
-                week: 'Неделя',
-                completed: 'Завершено',
-                selectedDate: 'Задачи на выбранную дату:'
+                selectedDate: 'Выбранные задачи:',
+                light: 'Светлая',
+                dark: 'Темная',
+                clear: 'Прозрачный',
+                tinted: 'Тонированный'
             }
         };
 
@@ -974,19 +1048,31 @@
 
         // Initialize
         document.documentElement.setAttribute('data-theme', currentTheme);
-        if (currentTheme === 'dark') {
-            document.getElementById('themeToggle').classList.add('active');
-        }
-        updateLanguage();
+        document.documentElement.setAttribute('data-glass', currentGlass);
         updateTodaySection();
         renderTasks();
         setupCalendar();
 
-        // Event Listeners
-        const cmdInput = document.getElementById('cmdInput');
-        const sendBtn = document.getElementById('sendBtn');
+        // Modal functions (global for ontouchend)
+        function openSettings() {
+            document.getElementById('settingsModal').classList.add('active');
+        }
+
+        function closeSettings() {
+            document.getElementById('settingsModal').classList.remove('active');
+        }
+
+        function openCalendar() {
+            document.getElementById('calendarModal').classList.add('active');
+            renderCalendar();
+        }
+
+        function closeCalendar() {
+            document.getElementById('calendarModal').classList.remove('active');
+        }
 
         function handleSubmit() {
+            const cmdInput = document.getElementById('cmdInput');
             const value = cmdInput.value.trim();
             if (value) {
                 handleCommand(value);
@@ -994,93 +1080,69 @@
             }
         }
 
-        sendBtn.addEventListener('click', handleSubmit);
-        sendBtn.addEventListener('touchend', (e) => {
-            e.preventDefault();
-            handleSubmit();
-        });
+        function prevMonth() {
+            calendarDate.setMonth(calendarDate.getMonth() - 1);
+            renderCalendar();
+        }
 
-        cmdInput.addEventListener('keypress', (e) => {
+        function nextMonth() {
+            calendarDate.setMonth(calendarDate.getMonth() + 1);
+            renderCalendar();
+        }
+
+        // Event Listeners
+        document.getElementById('cmdInput').addEventListener('keypress', (e) => {
             if (e.key === 'Enter') {
                 e.preventDefault();
                 handleSubmit();
             }
         });
 
-        cmdInput.addEventListener('input', (e) => {
-            const value = e.target.value.trim();
-            if (value.length > 2 && !value.includes(' ')) {
-                handleSearch(value);
-            } else if (!value) {
-                renderTasks();
-            }
-        });
-
-        document.getElementById('settingsBtn').addEventListener('click', (e) => {
-            e.stopPropagation();
-            document.getElementById('settingsModal').classList.add('active');
-        });
-
-        document.getElementById('closeSettings').addEventListener('click', (e) => {
-            e.stopPropagation();
-            document.getElementById('settingsModal').classList.remove('active');
-        });
-
-        document.getElementById('settingsModal').addEventListener('click', (e) => {
-            if (e.target.id === 'settingsModal') {
-                document.getElementById('settingsModal').classList.remove('active');
-            }
-        });
-
-        document.getElementById('calendarBtn').addEventListener('click', (e) => {
-            e.stopPropagation();
-            document.getElementById('calendarModal').classList.add('active');
-            renderCalendar();
-        });
-
-        document.getElementById('closeCalendar').addEventListener('click', (e) => {
-            e.stopPropagation();
-            document.getElementById('calendarModal').classList.remove('active');
-        });
-
-        document.getElementById('calendarModal').addEventListener('click', (e) => {
-            if (e.target.id === 'calendarModal') {
-                document.getElementById('calendarModal').classList.remove('active');
-            }
-        });
-
-        document.getElementById('themeToggle').addEventListener('click', toggleTheme);
-
-        document.querySelectorAll('.lang-btn').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                const lang = e.target.dataset.lang;
-                if (lang !== currentLang) {
-                    currentLang = lang;
-                    localStorage.setItem('lang', currentLang);
-                    document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
-                    e.target.classList.add('active');
-                    updateLanguage();
-                }
+        // Theme Switch
+        document.querySelectorAll('#themeSwitch .switch-option').forEach(opt => {
+            opt.addEventListener('click', function() {
+                const theme = this.dataset.theme;
+                document.querySelectorAll('#themeSwitch .switch-option').forEach(o => o.classList.remove('active'));
+                this.classList.add('active');
+                currentTheme = theme;
+                localStorage.setItem('theme', currentTheme);
+                document.documentElement.setAttribute('data-theme', currentTheme);
+                tg.setHeaderColor(currentTheme === 'light' ? '#FFFFFF' : '#000000');
             });
         });
 
+        // Glass Switch
+        document.querySelectorAll('#glassSwitch .switch-option').forEach(opt => {
+            opt.addEventListener('click', function() {
+                const glass = this.dataset.glass;
+                document.querySelectorAll('#glassSwitch .switch-option').forEach(o => o.classList.remove('active'));
+                this.classList.add('active');
+                currentGlass = glass;
+                localStorage.setItem('glass', currentGlass);
+                document.documentElement.setAttribute('data-glass', currentGlass);
+            });
+        });
+
+        // Lang Switch
+        document.querySelectorAll('#langSwitch .switch-option').forEach(opt => {
+            opt.addEventListener('click', function() {
+                const lang = this.dataset.lang;
+                document.querySelectorAll('#langSwitch .switch-option').forEach(o => o.classList.remove('active'));
+                this.classList.add('active');
+                currentLang = lang;
+                localStorage.setItem('lang', currentLang);
+                updateLanguage();
+            });
+        });
+
+        // Filter chips
         document.querySelectorAll('.filter-chip').forEach(chip => {
-            chip.addEventListener('click', (e) => {
+            chip.addEventListener('click', function() {
                 document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
-                e.target.classList.add('active');
-                currentFilter = e.target.dataset.filter;
+                this.classList.add('active');
+                currentFilter = this.dataset.filter;
                 renderTasks();
             });
-        });
-
-        document.getElementById('prevMonth').addEventListener('click', () => {
-            calendarDate.setMonth(calendarDate.getMonth() - 1);
-            renderCalendar();
-        });
-
-        document.getElementById('nextMonth').addEventListener('click', () => {
-            calendarDate.setMonth(calendarDate.getMonth() + 1);
-            renderCalendar();
         });
 
         // Functions
@@ -1088,7 +1150,6 @@
             document.getElementById('todayDate').textContent = currentDate;
             document.getElementById('todayDay').textContent = dayNames[currentLang][now.getDay()];
             document.getElementById('todayMonth').textContent = `${monthNames[currentLang][currentMonth]} ${currentYear}`;
-            
             updateStats();
         }
 
@@ -1142,16 +1203,6 @@
             updateStats();
         }
 
-        function handleSearch(query) {
-            const filtered = tasks.filter(task => {
-                const textMatch = task.text.toLowerCase().includes(query.toLowerCase());
-                const moduleMatch = task.modules.some(m => m.toLowerCase().includes(query.toLowerCase()));
-                return textMatch || moduleMatch;
-            });
-
-            renderTasks(filtered);
-        }
-
         function renderTasks(tasksToRender = null) {
             let filteredTasks = tasksToRender || tasks;
 
@@ -1171,14 +1222,13 @@
             }
 
             const container = document.getElementById('tasksList');
-            document.getElementById('taskCount').textContent = `${filteredTasks.length} ${translations[currentLang].tasks}`;
             
             if (filteredTasks.length === 0) {
                 container.innerHTML = `
                     <div class="empty-state">
-                        <div class="empty-icon">📝</div>
-                        <div class="empty-text">${translations[currentLang].empty}</div>
-                        <div class="empty-hint">${translations[currentLang].emptyDesc}</div>
+                        <div class="empty-icon">✨</div>
+                        <div style="font-size: 18px; font-weight: 600; color: var(--text-secondary); margin-bottom: 8px;">${translations[currentLang].empty}</div>
+                        <div style="font-size: 14px; color: var(--text-tertiary);">${translations[currentLang].emptyDesc}</div>
                     </div>
                 `;
                 return;
@@ -1214,66 +1264,42 @@
             const taskItems = document.querySelectorAll('.task-item');
             
             taskItems.forEach(item => {
-                item.addEventListener('dragstart', handleDragStart);
-                item.addEventListener('dragend', handleDragEnd);
-                item.addEventListener('dragover', handleDragOver);
-                item.addEventListener('drop', handleDrop);
-                item.addEventListener('dragleave', handleDragLeave);
+                item.addEventListener('dragstart', function(e) {
+                    draggedTask = this;
+                    this.classList.add('dragging');
+                    e.dataTransfer.effectAllowed = 'move';
+                });
+
+                item.addEventListener('dragend', function() {
+                    this.classList.remove('dragging');
+                });
+
+                item.addEventListener('dragover', function(e) {
+                    e.preventDefault();
+                    return false;
+                });
+
+                item.addEventListener('drop', function(e) {
+                    e.stopPropagation();
+                    
+                    if (draggedTask !== this) {
+                        const draggedId = parseInt(draggedTask.dataset.id);
+                        const targetId = parseInt(this.dataset.id);
+                        
+                        const draggedIndex = tasks.findIndex(t => t.id === draggedId);
+                        const targetIndex = tasks.findIndex(t => t.id === targetId);
+                        
+                        if (draggedIndex !== -1 && targetIndex !== -1) {
+                            const [removed] = tasks.splice(draggedIndex, 1);
+                            tasks.splice(targetIndex, 0, removed);
+                            saveTasks();
+                            renderTasks();
+                        }
+                    }
+                    
+                    return false;
+                });
             });
-        }
-
-        function handleDragStart(e) {
-            draggedTask = this;
-            this.classList.add('dragging');
-            e.dataTransfer.effectAllowed = 'move';
-            e.dataTransfer.setData('text/html', this.innerHTML);
-        }
-
-        function handleDragEnd(e) {
-            this.classList.remove('dragging');
-            document.querySelectorAll('.task-item').forEach(item => {
-                item.classList.remove('drag-over');
-            });
-        }
-
-        function handleDragOver(e) {
-            if (e.preventDefault) {
-                e.preventDefault();
-            }
-            e.dataTransfer.dropEffect = 'move';
-            
-            if (this !== draggedTask) {
-                this.classList.add('drag-over');
-            }
-            
-            return false;
-        }
-
-        function handleDragLeave(e) {
-            this.classList.remove('drag-over');
-        }
-
-        function handleDrop(e) {
-            if (e.stopPropagation) {
-                e.stopPropagation();
-            }
-            
-            if (draggedTask !== this) {
-                const draggedId = parseInt(draggedTask.dataset.id);
-                const targetId = parseInt(this.dataset.id);
-                
-                const draggedIndex = tasks.findIndex(t => t.id === draggedId);
-                const targetIndex = tasks.findIndex(t => t.id === targetId);
-                
-                if (draggedIndex !== -1 && targetIndex !== -1) {
-                    const [removed] = tasks.splice(draggedIndex, 1);
-                    tasks.splice(targetIndex, 0, removed);
-                    saveTasks();
-                    renderTasks();
-                }
-            }
-            
-            return false;
         }
 
         function toggleTask(id) {
@@ -1286,7 +1312,7 @@
         }
 
         function deleteTask(id) {
-            if (confirm(currentLang === 'en' ? 'Delete this task?' : 'Удалить эту задачу?')) {
+            if (confirm(currentLang === 'en' ? 'Delete task?' : 'Удалить задачу?')) {
                 tasks = tasks.filter(t => t.id !== id);
                 saveTasks();
                 renderTasks();
@@ -1298,38 +1324,8 @@
             localStorage.setItem('tasks', JSON.stringify(tasks));
         }
 
-        function toggleTheme() {
-            currentTheme = currentTheme === 'light' ? 'dark' : 'light';
-            localStorage.setItem('theme', currentTheme);
-            document.documentElement.setAttribute('data-theme', currentTheme);
-            
-            const toggle = document.getElementById('themeToggle');
-            if (currentTheme === 'dark') {
-                toggle.classList.add('active');
-            } else {
-                toggle.classList.remove('active');
-            }
-            
-            tg.setHeaderColor(currentTheme === 'light' ? '#FFFFFF' : '#000000');
-            tg.setBackgroundColor(currentTheme === 'light' ? '#FFFFFF' : '#000000');
-        }
-
         function updateLanguage() {
-            document.getElementById('sectionTitle').textContent = translations[currentLang].title;
             document.getElementById('cmdInput').placeholder = translations[currentLang].placeholder;
-            document.getElementById('cmdHint').textContent = translations[currentLang].hint;
-            document.getElementById('modalTitle').textContent = translations[currentLang].settings;
-            document.getElementById('appearanceTitle').textContent = translations[currentLang].appearance;
-            document.getElementById('darkModeLabel').textContent = translations[currentLang].darkMode;
-            document.getElementById('languageTitle').textContent = translations[currentLang].language;
-            document.getElementById('calendarTitle').textContent = translations[currentLang].calendar;
-            document.getElementById('selectedDateLabel').textContent = translations[currentLang].selectedDate;
-            
-            document.querySelectorAll('.filter-chip').forEach((chip, idx) => {
-                const filters = ['all', 'today', 'week', 'completed'];
-                chip.textContent = translations[currentLang][filters[idx]];
-            });
-            
             updateTodaySection();
             renderTasks();
         }
@@ -1406,22 +1402,31 @@
             const container = document.getElementById('dateTasksList');
             
             if (dateTasks.length === 0) {
-                container.innerHTML = `<div style="color: var(--text-secondary); font-size: 14px;">No tasks for this day</div>`;
+                container.innerHTML = `<div style="color: var(--text-secondary); font-size: 14px; text-align: center; padding: 12px;">No tasks</div>`;
                 return;
             }
             
             container.innerHTML = dateTasks.map(task => `
-                <div style="padding: 8px; background: var(--bg-tertiary); border-radius: 8px; margin-bottom: 4px; font-size: 14px;">
+                <div style="padding: 12px; background: var(--glass-bg); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border: 1px solid var(--glass-border); border-radius: 12px; margin-bottom: 8px; font-size: 14px; font-weight: 500;">
                     ${task.text}
                 </div>
             `).join('');
         }
 
-        // Set active language button
-        document.querySelectorAll('.lang-btn').forEach(btn => {
-            if (btn.dataset.lang === currentLang) {
-                btn.classList.add('active');
-            }
+        // Set active switches on load
+        document.querySelectorAll('#themeSwitch .switch-option').forEach(opt => {
+            if (opt.dataset.theme === currentTheme) opt.classList.add('active');
+            else opt.classList.remove('active');
+        });
+
+        document.querySelectorAll('#glassSwitch .switch-option').forEach(opt => {
+            if (opt.dataset.glass === currentGlass) opt.classList.add('active');
+            else opt.classList.remove('active');
+        });
+
+        document.querySelectorAll('#langSwitch .switch-option').forEach(opt => {
+            if (opt.dataset.lang === currentLang) opt.classList.add('active');
+            else opt.classList.remove('active');
         });
     </script>
 </body>
