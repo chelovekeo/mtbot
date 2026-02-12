@@ -10,6 +10,7 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
         }
 
         :root {
@@ -41,7 +42,6 @@
             --shadow-lg: 0 16px 48px rgba(0, 0, 0, 0.5);
         }
 
-        /* Clear Glass - прозрачный */
         [data-glass="clear"] {
             --glass-bg: rgba(255, 255, 255, 0.4);
             --glass-border: rgba(0, 0, 0, 0.06);
@@ -53,7 +53,6 @@
             --glass-border: rgba(255, 255, 255, 0.06);
         }
 
-        /* Tinted Glass - замутненный с цветом */
         [data-glass="tinted"] {
             --glass-bg: rgba(0, 184, 212, 0.25);
             --glass-border: rgba(0, 184, 212, 0.3);
@@ -66,13 +65,12 @@
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Google Sans', 'Segoe UI', Roboto, 'SF Pro Display', sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Google Sans', 'Segoe UI', Roboto, sans-serif;
             background: var(--bg-primary);
             color: var(--text-primary);
             overflow-x: hidden;
-            transition: background 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: background 0.5s ease;
             -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
         }
 
         .app-container {
@@ -109,7 +107,6 @@
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            filter: drop-shadow(0 2px 4px rgba(0, 184, 212, 0.3));
         }
 
         .header-actions {
@@ -130,9 +127,9 @@
             justify-content: center;
             cursor: pointer;
             font-size: 22px;
-            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-            -webkit-tap-highlight-color: transparent;
+            transition: all 0.3s;
             box-shadow: var(--shadow-sm);
+            user-select: none;
         }
 
         .icon-btn:active {
@@ -150,13 +147,6 @@
             box-shadow: var(--shadow-sm);
         }
 
-        .today-header {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 12px;
-        }
-
         .today-date {
             font-size: 42px;
             font-weight: 800;
@@ -165,7 +155,6 @@
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            filter: drop-shadow(0 2px 8px rgba(0, 184, 212, 0.3));
         }
 
         .productivity-stats {
@@ -213,8 +202,7 @@
             display: flex;
             gap: 10px;
             overflow-x: auto;
-            padding-bottom: 4px;
-            margin-bottom: 20px;
+            padding: 0 20px 20px;
             -webkit-overflow-scrolling: touch;
         }
 
@@ -233,9 +221,9 @@
             font-weight: 600;
             white-space: nowrap;
             cursor: pointer;
-            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-            -webkit-tap-highlight-color: transparent;
+            transition: all 0.3s;
             box-shadow: var(--shadow-sm);
+            user-select: none;
         }
 
         .filter-chip:active {
@@ -260,38 +248,7 @@
             display: flex;
             align-items: flex-start;
             gap: 12px;
-            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-            cursor: move;
-            position: relative;
-            -webkit-tap-highlight-color: transparent;
-            user-select: none;
             box-shadow: var(--shadow-sm);
-        }
-
-        .task-item:active {
-            transform: scale(0.98);
-        }
-
-        .task-item::before {
-            content: '';
-            position: absolute;
-            left: 0;
-            top: 0;
-            bottom: 0;
-            width: 4px;
-            background: var(--gradient-primary);
-            opacity: 0;
-            transition: opacity 0.4s;
-            border-radius: 20px 0 0 20px;
-        }
-
-        .drag-handle {
-            font-size: 18px;
-            color: var(--text-tertiary);
-            cursor: move;
-            padding: 4px;
-            margin-left: -4px;
-            opacity: 0.6;
         }
 
         .task-checkbox {
@@ -302,12 +259,12 @@
             cursor: pointer;
             flex-shrink: 0;
             margin-top: 2px;
-            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            transition: all 0.3s;
             display: flex;
             align-items: center;
             justify-content: center;
-            -webkit-tap-highlight-color: transparent;
             background: var(--glass-bg);
+            user-select: none;
         }
 
         .task-checkbox:active {
@@ -317,7 +274,6 @@
         .task-checkbox.checked {
             background: var(--accent-green);
             border-color: var(--accent-green);
-            box-shadow: 0 0 12px rgba(0, 230, 118, 0.5);
         }
 
         .task-checkbox.checked::after {
@@ -329,14 +285,12 @@
 
         .task-content {
             flex: 1;
-            min-width: 0;
         }
 
         .task-text {
             font-size: 15px;
             line-height: 1.6;
             color: var(--text-primary);
-            word-wrap: break-word;
             font-weight: 500;
         }
 
@@ -359,7 +313,6 @@
             border-radius: 10px;
             font-weight: 700;
             text-transform: uppercase;
-            letter-spacing: 0.4px;
         }
 
         .task-tag.today { background: rgba(0, 230, 118, 0.2); color: var(--accent-green); }
@@ -378,9 +331,7 @@
             font-size: 22px;
             cursor: pointer;
             padding: 4px 8px;
-            transition: all 0.3s;
-            -webkit-tap-highlight-color: transparent;
-            border-radius: 8px;
+            user-select: none;
         }
 
         .delete-btn:active {
@@ -390,12 +341,6 @@
         .empty-state {
             text-align: center;
             padding: 60px 20px;
-        }
-
-        .empty-icon {
-            font-size: 72px;
-            margin-bottom: 20px;
-            opacity: 0.4;
         }
 
         .cmd-container {
@@ -422,14 +367,7 @@
             display: flex;
             align-items: center;
             gap: 10px;
-            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
             box-shadow: var(--shadow-sm);
-        }
-
-        .cmd-input-wrapper:focus-within {
-            border-color: var(--accent-blue);
-            box-shadow: 0 0 0 6px rgba(0, 184, 212, 0.15), var(--shadow-md);
-            transform: translateY(-2px);
         }
 
         .cmd-icon {
@@ -438,7 +376,6 @@
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            flex-shrink: 0;
         }
 
         .cmd-input {
@@ -446,14 +383,8 @@
             background: transparent;
             border: none;
             outline: none;
-            font-family: inherit;
             font-size: 16px;
             color: var(--text-primary);
-            min-width: 0;
-        }
-
-        .cmd-input::placeholder {
-            color: var(--text-secondary);
         }
 
         .send-btn {
@@ -468,14 +399,12 @@
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-            flex-shrink: 0;
-            -webkit-tap-highlight-color: transparent;
             box-shadow: 0 4px 16px rgba(0, 184, 212, 0.4);
+            user-select: none;
         }
 
         .send-btn:active {
-            transform: scale(0.85) rotate(45deg);
+            transform: scale(0.85);
         }
 
         .modal-overlay {
@@ -496,7 +425,6 @@
 
         .modal-overlay.active {
             display: flex;
-            animation: fadeIn 0.3s ease;
         }
 
         .modal-content {
@@ -511,14 +439,6 @@
             overflow-y: auto;
             padding: 28px;
             box-shadow: var(--shadow-lg);
-            transform: scale(0.9) translateY(20px);
-            opacity: 0;
-            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-        }
-
-        .modal-overlay.active .modal-content {
-            transform: scale(1) translateY(0);
-            opacity: 1;
         }
 
         .modal-header {
@@ -542,8 +462,6 @@
             height: 36px;
             border-radius: 12px;
             background: var(--glass-bg);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
             border: 1px solid var(--glass-border);
             display: flex;
             align-items: center;
@@ -551,12 +469,11 @@
             font-size: 24px;
             cursor: pointer;
             color: var(--text-secondary);
-            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-            -webkit-tap-highlight-color: transparent;
+            user-select: none;
         }
 
         .close-btn:active {
-            transform: scale(0.85) rotate(90deg);
+            transform: scale(0.85);
         }
 
         .settings-group {
@@ -594,8 +511,6 @@
             display: flex;
             gap: 8px;
             background: var(--glass-bg);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
             border: 1px solid var(--glass-border);
             border-radius: 14px;
             padding: 4px;
@@ -609,9 +524,8 @@
             font-size: 13px;
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-            -webkit-tap-highlight-color: transparent;
             color: var(--text-secondary);
+            user-select: none;
         }
 
         .switch-option:active {
@@ -661,17 +575,14 @@
             height: 38px;
             border-radius: 12px;
             background: var(--glass-bg);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
             border: 1px solid var(--glass-border);
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
             font-size: 18px;
-            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-            -webkit-tap-highlight-color: transparent;
             box-shadow: var(--shadow-sm);
+            user-select: none;
         }
 
         .calendar-nav-btn:active {
@@ -701,13 +612,10 @@
             border-radius: 12px;
             font-size: 14px;
             cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
             position: relative;
-            -webkit-tap-highlight-color: transparent;
             font-weight: 600;
             background: var(--glass-bg);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
+            user-select: none;
         }
 
         .calendar-day:active {
@@ -729,26 +637,11 @@
             height: 5px;
             background: var(--accent-green);
             border-radius: 50%;
-            box-shadow: 0 0 6px var(--accent-green);
         }
 
         .calendar-day.other-month {
             color: var(--text-tertiary);
             opacity: 0.3;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
-        @keyframes slideUp {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .task-item {
-            animation: slideUp 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
     </style>
 </head>
@@ -765,10 +658,10 @@
         </div>
 
         <div class="today-section">
-            <div class="today-header">
+            <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px;">
                 <div class="today-date" id="todayDate">12</div>
                 <div>
-                    <div class="today-day" id="todayDay">Monday</div>
+                    <div style="font-size: 16px; color: var(--text-secondary); font-weight: 500;" id="todayDay">Monday</div>
                     <div style="font-size: 13px; color: var(--text-tertiary);" id="todayMonth">February 2026</div>
                 </div>
             </div>
@@ -788,13 +681,11 @@
             </div>
         </div>
 
-        <div style="padding: 0 20px;">
-            <div class="filter-chips" id="filterChips">
-                <div class="filter-chip active" data-filter="all">All</div>
-                <div class="filter-chip" data-filter="today">Today</div>
-                <div class="filter-chip" data-filter="week">Week</div>
-                <div class="filter-chip" data-filter="completed">Done</div>
-            </div>
+        <div class="filter-chips" id="filterChips">
+            <div class="filter-chip active" data-filter="all">All</div>
+            <div class="filter-chip" data-filter="today">Today</div>
+            <div class="filter-chip" data-filter="week">Week</div>
+            <div class="filter-chip" data-filter="completed">Done</div>
         </div>
 
         <div class="tasks-section">
@@ -809,7 +700,6 @@
                     class="cmd-input" 
                     id="cmdInput" 
                     placeholder="Add task..."
-                    autocomplete="off"
                 >
                 <button class="send-btn" id="sendBtn">➤</button>
             </div>
@@ -828,17 +718,17 @@
                 
                 <div class="setting-item">
                     <div class="setting-label" id="themeLabel">Theme</div>
-                    <div class="dual-switch" id="themeSwitch">
-                        <div class="switch-option active" data-theme="light" id="themeLightBtn">Light</div>
-                        <div class="switch-option" data-theme="dark" id="themeDarkBtn">Dark</div>
+                    <div class="dual-switch">
+                        <div class="switch-option active" data-theme="light" id="themeLight">Light</div>
+                        <div class="switch-option" data-theme="dark" id="themeDark">Dark</div>
                     </div>
                 </div>
 
                 <div class="setting-item">
                     <div class="setting-label" id="glassLabel">Glass Style</div>
-                    <div class="dual-switch" id="glassSwitch">
-                        <div class="switch-option active" data-glass="clear" id="glassClearBtn">Clear</div>
-                        <div class="switch-option" data-glass="tinted" id="glassTintedBtn">Tinted</div>
+                    <div class="dual-switch">
+                        <div class="switch-option active" data-glass="clear" id="glassClear">Clear</div>
+                        <div class="switch-option" data-glass="tinted" id="glassTinted">Tinted</div>
                     </div>
                 </div>
             </div>
@@ -846,9 +736,9 @@
             <div class="settings-group">
                 <div class="settings-group-title" id="languageTitle">LANGUAGE</div>
                 <div class="setting-item">
-                    <div class="dual-switch" id="langSwitch">
-                        <div class="switch-option active" data-lang="en" id="langEnBtn">English</div>
-                        <div class="switch-option" data-lang="ru" id="langRuBtn">Русский</div>
+                    <div class="dual-switch">
+                        <div class="switch-option active" data-lang="en" id="langEn">English</div>
+                        <div class="switch-option" data-lang="ru" id="langRu">Русский</div>
                     </div>
                 </div>
             </div>
@@ -871,11 +761,6 @@
                     </div>
                 </div>
                 <div class="calendar-grid" id="calendarGrid"></div>
-            </div>
-
-            <div style="margin-top: 20px; padding: 18px; background: var(--glass-bg); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); border: 1px solid var(--glass-border); border-radius: 18px;">
-                <div style="font-size: 13px; color: var(--text-secondary); margin-bottom: 12px; font-weight: 700; text-transform: uppercase;" id="selectedLabel">Selected Tasks:</div>
-                <div id="dateTasksList"></div>
             </div>
         </div>
     </div>
@@ -900,7 +785,6 @@
             en: {
                 placeholder: 'Add task...',
                 empty: 'No tasks yet',
-                emptyDesc: 'Start adding below',
                 settings: 'Settings',
                 appearance: 'APPEARANCE',
                 theme: 'Theme',
@@ -911,7 +795,6 @@
                 tinted: 'Tinted',
                 language: 'LANGUAGE',
                 calendar: 'Calendar',
-                selected: 'Selected Tasks:',
                 today: 'Today',
                 week: 'Week',
                 total: 'Total',
@@ -921,7 +804,6 @@
             ru: {
                 placeholder: 'Добавить задачу...',
                 empty: 'Пока нет задач',
-                emptyDesc: 'Начните добавлять ниже',
                 settings: 'Настройки',
                 appearance: 'ВНЕШНИЙ ВИД',
                 theme: 'Тема',
@@ -932,7 +814,6 @@
                 tinted: 'Тонированный',
                 language: 'ЯЗЫК',
                 calendar: 'Календарь',
-                selected: 'Выбранные задачи:',
                 today: 'Сегодня',
                 week: 'Неделя',
                 total: 'Всего',
@@ -942,141 +823,115 @@
         };
 
         const currentDay = days[now.getDay()];
-        const currentDate = now.getDate();
-        const currentMonth = now.getMonth();
-        const currentYear = now.getFullYear();
-
         let tasks = JSON.parse(localStorage.getItem('tasks') || '[]');
         let currentLang = localStorage.getItem('lang') || 'en';
         let currentTheme = localStorage.getItem('theme') || 'light';
         let currentGlass = localStorage.getItem('glass') || 'clear';
         let currentFilter = 'all';
-        let calendarDate = new Date(currentYear, currentMonth, 1);
-        let draggedTask = null;
-
+        let calendarDate = new Date();
         const modules = [...days, 'daily', 'weekly', 'monthly'];
 
-        // Initialize
         document.documentElement.setAttribute('data-theme', currentTheme);
         document.documentElement.setAttribute('data-glass', currentGlass);
-        updateLanguage();
-        updateTodaySection();
-        renderTasks();
-        setupCalendar();
 
-        // Universal click handler
-        function handleClick(element, callback) {
-            let touchStarted = false;
-            
-            element.addEventListener('touchstart', (e) => {
-                touchStarted = true;
+        // Simple touch handler
+        function addTouch(el, fn) {
+            el.addEventListener('touchend', (e) => {
+                e.preventDefault();
+                fn();
             });
-            
-            element.addEventListener('touchend', (e) => {
-                if (touchStarted) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    callback(e);
-                    touchStarted = false;
-                }
-            });
-            
-            element.addEventListener('click', (e) => {
-                if (!touchStarted) {
-                    callback(e);
-                }
-            });
+            el.addEventListener('click', fn);
         }
 
-        // Modal handlers
-        handleClick(document.getElementById('settingsBtn'), () => {
+        // Modals
+        addTouch(document.getElementById('settingsBtn'), () => {
             document.getElementById('settingsModal').classList.add('active');
         });
 
-        handleClick(document.getElementById('calendarBtn'), () => {
+        addTouch(document.getElementById('calendarBtn'), () => {
             document.getElementById('calendarModal').classList.add('active');
             renderCalendar();
         });
 
-        handleClick(document.getElementById('closeSettings'), () => {
+        addTouch(document.getElementById('closeSettings'), () => {
             document.getElementById('settingsModal').classList.remove('active');
         });
 
-        handleClick(document.getElementById('closeCalendar'), () => {
+        addTouch(document.getElementById('closeCalendar'), () => {
             document.getElementById('calendarModal').classList.remove('active');
         });
 
-        document.getElementById('settingsModal').addEventListener('click', (e) => {
-            if (e.target.id === 'settingsModal') {
-                document.getElementById('settingsModal').classList.remove('active');
+        // Send button
+        addTouch(document.getElementById('sendBtn'), () => {
+            const val = document.getElementById('cmdInput').value.trim();
+            if (val) {
+                handleCommand(val);
+                document.getElementById('cmdInput').value = '';
             }
         });
 
-        document.getElementById('calendarModal').addEventListener('click', (e) => {
-            if (e.target.id === 'calendarModal') {
-                document.getElementById('calendarModal').classList.remove('active');
-            }
-        });
-
-        // Command input
-        const cmdInput = document.getElementById('cmdInput');
-        const sendBtn = document.getElementById('sendBtn');
-
-        function handleSubmit() {
-            const value = cmdInput.value.trim();
-            if (value) {
-                handleCommand(value);
-                cmdInput.value = '';
-            }
-        }
-
-        handleClick(sendBtn, handleSubmit);
-
-        cmdInput.addEventListener('keypress', (e) => {
+        document.getElementById('cmdInput').addEventListener('keypress', (e) => {
             if (e.key === 'Enter') {
-                e.preventDefault();
-                handleSubmit();
+                const val = e.target.value.trim();
+                if (val) {
+                    handleCommand(val);
+                    e.target.value = '';
+                }
             }
         });
 
         // Switches
-        ['themeLightBtn', 'themeDarkBtn'].forEach(id => {
-            handleClick(document.getElementById(id), function() {
-                const theme = this.dataset.theme;
-                document.querySelectorAll('#themeSwitch .switch-option').forEach(o => o.classList.remove('active'));
-                this.classList.add('active');
-                currentTheme = theme;
-                localStorage.setItem('theme', currentTheme);
-                document.documentElement.setAttribute('data-theme', currentTheme);
-                tg.setHeaderColor(currentTheme === 'light' ? '#FFFFFF' : '#000000');
-            });
+        addTouch(document.getElementById('themeLight'), function() {
+            switchTheme('light');
         });
 
-        ['glassClearBtn', 'glassTintedBtn'].forEach(id => {
-            handleClick(document.getElementById(id), function() {
-                const glass = this.dataset.glass;
-                document.querySelectorAll('#glassSwitch .switch-option').forEach(o => o.classList.remove('active'));
-                this.classList.add('active');
-                currentGlass = glass;
-                localStorage.setItem('glass', currentGlass);
-                document.documentElement.setAttribute('data-glass', currentGlass);
-            });
+        addTouch(document.getElementById('themeDark'), function() {
+            switchTheme('dark');
         });
 
-        ['langEnBtn', 'langRuBtn'].forEach(id => {
-            handleClick(document.getElementById(id), function() {
-                const lang = this.dataset.lang;
-                document.querySelectorAll('#langSwitch .switch-option').forEach(o => o.classList.remove('active'));
-                this.classList.add('active');
-                currentLang = lang;
-                localStorage.setItem('lang', currentLang);
-                updateLanguage();
-            });
+        addTouch(document.getElementById('glassClear'), function() {
+            switchGlass('clear');
         });
+
+        addTouch(document.getElementById('glassTinted'), function() {
+            switchGlass('tinted');
+        });
+
+        addTouch(document.getElementById('langEn'), function() {
+            switchLang('en');
+        });
+
+        addTouch(document.getElementById('langRu'), function() {
+            switchLang('ru');
+        });
+
+        function switchTheme(theme) {
+            [document.getElementById('themeLight'), document.getElementById('themeDark')].forEach(el => el.classList.remove('active'));
+            document.getElementById('theme' + (theme === 'light' ? 'Light' : 'Dark')).classList.add('active');
+            currentTheme = theme;
+            localStorage.setItem('theme', theme);
+            document.documentElement.setAttribute('data-theme', theme);
+        }
+
+        function switchGlass(glass) {
+            [document.getElementById('glassClear'), document.getElementById('glassTinted')].forEach(el => el.classList.remove('active'));
+            document.getElementById('glass' + (glass === 'clear' ? 'Clear' : 'Tinted')).classList.add('active');
+            currentGlass = glass;
+            localStorage.setItem('glass', glass);
+            document.documentElement.setAttribute('data-glass', glass);
+        }
+
+        function switchLang(lang) {
+            [document.getElementById('langEn'), document.getElementById('langRu')].forEach(el => el.classList.remove('active'));
+            document.getElementById('lang' + (lang === 'en' ? 'En' : 'Ru')).classList.add('active');
+            currentLang = lang;
+            localStorage.setItem('lang', lang);
+            updateLanguage();
+        }
 
         // Filters
         document.querySelectorAll('.filter-chip').forEach(chip => {
-            handleClick(chip, function() {
+            addTouch(chip, function() {
                 document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
                 this.classList.add('active');
                 currentFilter = this.dataset.filter;
@@ -1085,76 +940,52 @@
         });
 
         // Calendar nav
-        handleClick(document.getElementById('prevMonth'), () => {
+        addTouch(document.getElementById('prevMonth'), () => {
             calendarDate.setMonth(calendarDate.getMonth() - 1);
             renderCalendar();
         });
 
-        handleClick(document.getElementById('nextMonth'), () => {
+        addTouch(document.getElementById('nextMonth'), () => {
             calendarDate.setMonth(calendarDate.getMonth() + 1);
             renderCalendar();
         });
 
-        // Update language
         function updateLanguage() {
             const t = translations[currentLang];
             document.getElementById('cmdInput').placeholder = t.placeholder;
             document.getElementById('settingsTitle').textContent = t.settings;
             document.getElementById('appearanceTitle').textContent = t.appearance;
             document.getElementById('themeLabel').textContent = t.theme;
-            document.getElementById('themeLightBtn').textContent = t.light;
-            document.getElementById('themeDarkBtn').textContent = t.dark;
+            document.getElementById('themeLight').textContent = t.light;
+            document.getElementById('themeDark').textContent = t.dark;
             document.getElementById('glassLabel').textContent = t.glassStyle;
-            document.getElementById('glassClearBtn').textContent = t.clear;
-            document.getElementById('glassTintedBtn').textContent = t.tinted;
+            document.getElementById('glassClear').textContent = t.clear;
+            document.getElementById('glassTinted').textContent = t.tinted;
             document.getElementById('languageTitle').textContent = t.language;
             document.getElementById('calendarTitle').textContent = t.calendar;
-            document.getElementById('selectedLabel').textContent = t.selected;
             document.getElementById('labelToday').textContent = t.today;
             document.getElementById('labelWeek').textContent = t.week;
             document.getElementById('labelTotal').textContent = t.total;
             
             document.querySelectorAll('.filter-chip').forEach((chip, idx) => {
-                const labels = [t.all, t.today, t.week, t.done];
-                chip.textContent = labels[idx];
+                chip.textContent = [t.all, t.today, t.week, t.done][idx];
             });
             
-            updateTodaySection();
+            document.getElementById('todayDay').textContent = dayNames[currentLang][now.getDay()];
+            document.getElementById('todayMonth').textContent = `${monthNames[currentLang][now.getMonth()]} ${now.getFullYear()}`;
+            document.getElementById('todayDate').textContent = now.getDate();
+            
             renderTasks();
         }
 
-        function updateTodaySection() {
-            document.getElementById('todayDate').textContent = currentDate;
-            document.getElementById('todayDay').textContent = dayNames[currentLang][now.getDay()];
-            document.getElementById('todayMonth').textContent = `${monthNames[currentLang][currentMonth]} ${currentYear}`;
-            updateStats();
-        }
-
-        function updateStats() {
-            const todayTasks = tasks.filter(t => t.modules.includes(currentDay) || t.modules.includes('daily')).length;
-            const weekStart = new Date(now);
-            weekStart.setDate(now.getDate() - now.getDay());
-            const weekTasks = tasks.filter(t => {
-                const taskDate = new Date(t.created);
-                return taskDate >= weekStart;
-            }).length;
-            
-            document.getElementById('statToday').textContent = todayTasks;
-            document.getElementById('statWeek').textContent = weekTasks;
-            document.getElementById('statTotal').textContent = tasks.length;
-        }
-
         function handleCommand(cmd) {
-            if (!cmd) return;
-
             const parts = cmd.split(' ');
             const taskModules = [];
             let taskText = [];
 
             parts.forEach(part => {
-                const lower = part.toLowerCase();
-                if (modules.includes(lower)) {
-                    taskModules.push(lower);
+                if (modules.includes(part.toLowerCase())) {
+                    taskModules.push(part.toLowerCase());
                 } else {
                     taskText.push(part);
                 }
@@ -1163,135 +994,88 @@
             if (taskText.length === 0) return;
             if (taskModules.length === 0) taskModules.push(currentDay);
 
-            const task = {
+            tasks.unshift({
                 id: Date.now(),
                 text: taskText.join(' '),
                 modules: taskModules,
                 completed: false,
                 created: new Date().toISOString()
-            };
+            });
 
-            tasks.unshift(task);
-            saveTasks();
+            localStorage.setItem('tasks', JSON.stringify(tasks));
             renderTasks();
             updateStats();
         }
 
-        function renderTasks(tasksToRender = null) {
-            let filteredTasks = tasksToRender || tasks;
+        function renderTasks() {
+            let filtered = tasks;
 
-            if (!tasksToRender) {
-                if (currentFilter === 'today') {
-                    filteredTasks = tasks.filter(t => t.modules.includes(currentDay) || t.modules.includes('daily'));
-                } else if (currentFilter === 'week') {
-                    const weekStart = new Date(now);
-                    weekStart.setDate(now.getDate() - now.getDay());
-                    filteredTasks = tasks.filter(t => {
-                        const taskDate = new Date(t.created);
-                        return taskDate >= weekStart;
-                    });
-                } else if (currentFilter === 'completed') {
-                    filteredTasks = tasks.filter(t => t.completed);
-                }
+            if (currentFilter === 'today') {
+                filtered = tasks.filter(t => t.modules.includes(currentDay) || t.modules.includes('daily'));
+            } else if (currentFilter === 'week') {
+                const weekStart = new Date(now);
+                weekStart.setDate(now.getDate() - now.getDay());
+                filtered = tasks.filter(t => new Date(t.created) >= weekStart);
+            } else if (currentFilter === 'completed') {
+                filtered = tasks.filter(t => t.completed);
             }
 
             const container = document.getElementById('tasksList');
-            const t = translations[currentLang];
             
-            if (filteredTasks.length === 0) {
-                container.innerHTML = `
-                    <div class="empty-state">
-                        <div class="empty-icon">✨</div>
-                        <div style="font-size: 18px; font-weight: 600; color: var(--text-secondary); margin-bottom: 8px;">${t.empty}</div>
-                        <div style="font-size: 14px; color: var(--text-tertiary);">${t.emptyDesc}</div>
-                    </div>
-                `;
+            if (filtered.length === 0) {
+                container.innerHTML = `<div class="empty-state"><div style="font-size: 72px; opacity: 0.4; margin-bottom: 20px;">✨</div><div style="font-size: 18px; font-weight: 600; color: var(--text-secondary);">${translations[currentLang].empty}</div></div>`;
                 return;
             }
 
-            container.innerHTML = filteredTasks.map(task => {
+            container.innerHTML = filtered.map(task => {
                 const isToday = task.modules.includes(currentDay);
-                const displayModules = isToday 
-                    ? ['today', ...task.modules.filter(m => m !== currentDay)]
-                    : task.modules;
+                const displayModules = isToday ? ['today', ...task.modules.filter(m => m !== currentDay)] : task.modules;
 
                 return `
-                    <div class="task-item" draggable="true" data-id="${task.id}">
-                        <div class="drag-handle">⋮⋮</div>
-                        <div class="task-checkbox ${task.completed ? 'checked' : ''}" onclick="toggleTask(${task.id})"></div>
+                    <div class="task-item">
+                        <div class="task-checkbox ${task.completed ? 'checked' : ''}" data-id="${task.id}"></div>
                         <div class="task-content">
                             <div class="task-text ${task.completed ? 'completed' : ''}">${task.text}</div>
-                            ${displayModules.length > 0 ? `
-                                <div class="task-meta">
-                                    ${displayModules.map(m => `<span class="task-tag ${m}">${m}</span>`).join('')}
-                                </div>
-                            ` : ''}
+                            ${displayModules.length ? `<div class="task-meta">${displayModules.map(m => `<span class="task-tag ${m}">${m}</span>`).join('')}</div>` : ''}
                         </div>
-                        <div class="delete-btn" onclick="deleteTask(${task.id})">×</div>
+                        <div class="delete-btn" data-id="${task.id}">×</div>
                     </div>
                 `;
             }).join('');
 
-            setupDragAndDrop();
-        }
-
-        function setupDragAndDrop() {
-            document.querySelectorAll('.task-item').forEach(item => {
-                item.addEventListener('dragstart', function(e) {
-                    draggedTask = this;
-                    this.classList.add('dragging');
+            // Add handlers
+            container.querySelectorAll('.task-checkbox').forEach(el => {
+                addTouch(el, () => {
+                    const task = tasks.find(t => t.id == el.dataset.id);
+                    if (task) {
+                        task.completed = !task.completed;
+                        localStorage.setItem('tasks', JSON.stringify(tasks));
+                        renderTasks();
+                    }
                 });
+            });
 
-                item.addEventListener('dragend', function() {
-                    this.classList.remove('dragging');
-                });
-
-                item.addEventListener('dragover', (e) => e.preventDefault());
-
-                item.addEventListener('drop', function(e) {
-                    e.stopPropagation();
-                    if (draggedTask !== this) {
-                        const draggedId = parseInt(draggedTask.dataset.id);
-                        const targetId = parseInt(this.dataset.id);
-                        const draggedIndex = tasks.findIndex(t => t.id === draggedId);
-                        const targetIndex = tasks.findIndex(t => t.id === targetId);
-                        
-                        if (draggedIndex !== -1 && targetIndex !== -1) {
-                            const [removed] = tasks.splice(draggedIndex, 1);
-                            tasks.splice(targetIndex, 0, removed);
-                            saveTasks();
-                            renderTasks();
-                        }
+            container.querySelectorAll('.delete-btn').forEach(el => {
+                addTouch(el, () => {
+                    if (confirm(currentLang === 'en' ? 'Delete?' : 'Удалить?')) {
+                        tasks = tasks.filter(t => t.id != el.dataset.id);
+                        localStorage.setItem('tasks', JSON.stringify(tasks));
+                        renderTasks();
+                        updateStats();
                     }
                 });
             });
         }
 
-        function toggleTask(id) {
-            const task = tasks.find(t => t.id === id);
-            if (task) {
-                task.completed = !task.completed;
-                saveTasks();
-                renderTasks();
-            }
-        }
-
-        function deleteTask(id) {
-            const t = translations[currentLang];
-            if (confirm(currentLang === 'en' ? 'Delete task?' : 'Удалить задачу?')) {
-                tasks = tasks.filter(t => t.id !== id);
-                saveTasks();
-                renderTasks();
-                updateStats();
-            }
-        }
-
-        function saveTasks() {
-            localStorage.setItem('tasks', JSON.stringify(tasks));
-        }
-
-        function setupCalendar() {
-            renderCalendar();
+        function updateStats() {
+            const todayTasks = tasks.filter(t => t.modules.includes(currentDay) || t.modules.includes('daily')).length;
+            const weekStart = new Date(now);
+            weekStart.setDate(now.getDate() - now.getDay());
+            const weekTasks = tasks.filter(t => new Date(t.created) >= weekStart).length;
+            
+            document.getElementById('statToday').textContent = todayTasks;
+            document.getElementById('statWeek').textContent = weekTasks;
+            document.getElementById('statTotal').textContent = tasks.length;
         }
 
         function renderCalendar() {
@@ -1312,79 +1096,65 @@
                 : ['Вс', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб'];
             
             dayNamesShort.forEach(name => {
-                const dayName = document.createElement('div');
-                dayName.className = 'calendar-day-name';
-                dayName.textContent = name;
-                grid.appendChild(dayName);
+                const el = document.createElement('div');
+                el.className = 'calendar-day-name';
+                el.textContent = name;
+                grid.appendChild(el);
             });
             
             for (let i = firstDay - 1; i >= 0; i--) {
-                const day = document.createElement('div');
-                day.className = 'calendar-day other-month';
-                day.textContent = daysInPrevMonth - i;
-                grid.appendChild(day);
+                const el = document.createElement('div');
+                el.className = 'calendar-day other-month';
+                el.textContent = daysInPrevMonth - i;
+                grid.appendChild(el);
             }
             
             for (let i = 1; i <= daysInMonth; i++) {
-                const day = document.createElement('div');
-                day.className = 'calendar-day';
-                day.textContent = i;
+                const el = document.createElement('div');
+                el.className = 'calendar-day';
+                el.textContent = i;
                 
-                if (i === currentDate && month === currentMonth && year === currentYear) {
-                    day.classList.add('today');
+                if (i === now.getDate() && month === now.getMonth() && year === now.getFullYear()) {
+                    el.classList.add('today');
                 }
                 
                 const dayName = days[new Date(year, month, i).getDay()];
                 if (tasks.some(t => t.modules.includes(dayName))) {
-                    day.classList.add('has-tasks');
+                    el.classList.add('has-tasks');
                 }
                 
-                handleClick(day, () => showDateTasks(year, month, i));
-                grid.appendChild(day);
+                grid.appendChild(el);
             }
             
             const totalCells = firstDay + daysInMonth;
             const remainingCells = 42 - totalCells;
             for (let i = 1; i <= remainingCells; i++) {
-                const day = document.createElement('div');
-                day.className = 'calendar-day other-month';
-                day.textContent = i;
-                grid.appendChild(day);
+                const el = document.createElement('div');
+                el.className = 'calendar-day other-month';
+                el.textContent = i;
+                grid.appendChild(el);
             }
         }
 
-        function showDateTasks(year, month, day) {
-            const dayName = days[new Date(year, month, day).getDay()];
-            const dateTasks = tasks.filter(t => t.modules.includes(dayName) || t.modules.includes('daily'));
-            const container = document.getElementById('dateTasksList');
-            
-            if (dateTasks.length === 0) {
-                container.innerHTML = `<div style="color: var(--text-secondary); font-size: 14px; text-align: center; padding: 12px;">No tasks</div>`;
-                return;
-            }
-            
-            container.innerHTML = dateTasks.map(task => `
-                <div style="padding: 12px; background: var(--glass-bg); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border: 1px solid var(--glass-border); border-radius: 12px; margin-bottom: 8px; font-size: 14px; font-weight: 500;">
-                    ${task.text}
-                </div>
-            `).join('');
-        }
-
-        // Set initial active switches
+        // Set initial state
         if (currentTheme === 'dark') {
-            document.getElementById('themeLightBtn').classList.remove('active');
-            document.getElementById('themeDarkBtn').classList.add('active');
+            document.getElementById('themeLight').classList.remove('active');
+            document.getElementById('themeDark').classList.add('active');
         }
         
         if (currentGlass === 'tinted') {
-            document.getElementById('glassClearBtn').classList.remove('active');
-            document.getElementById('glassTintedBtn').classList.add('active');
+            document.getElementById('glassClear').classList.remove('active');
+            document.getElementById('glassTinted').classList.add('active');
         }
         
         if (currentLang === 'ru') {
-            document.getElementById('langEnBtn').classList.remove('active');
-            document.getElementById('langRuBtn').classList.add('active');
+            document.getElementById('langEn').classList.remove('active');
+            document.getElementById('langRu').classList.add('active');
         }
+
+        updateLanguage();
+        updateStats();
+        renderTasks();
     </script>
 </body>
 </html>
