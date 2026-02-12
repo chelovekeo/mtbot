@@ -14,17 +14,14 @@
 
         :root {
             --bg-primary: #FFFFFF;
-            --bg-secondary: rgba(248, 249, 250, 0.7);
-            --bg-tertiary: rgba(240, 240, 240, 0.5);
-            --glass-bg: rgba(255, 255, 255, 0.7);
-            --glass-border: rgba(255, 255, 255, 0.3);
+            --glass-bg: rgba(255, 255, 255, 0.6);
+            --glass-border: rgba(0, 0, 0, 0.08);
             --text-primary: #000000;
             --text-secondary: #666666;
             --text-tertiary: #999999;
             --accent-blue: #00B8D4;
             --accent-green: #00E676;
             --accent-purple: #7C4DFF;
-            --border-color: rgba(0, 0, 0, 0.1);
             --shadow-sm: 0 4px 16px rgba(0, 0, 0, 0.08);
             --shadow-md: 0 8px 32px rgba(0, 0, 0, 0.12);
             --shadow-lg: 0 16px 48px rgba(0, 0, 0, 0.16);
@@ -34,27 +31,38 @@
 
         [data-theme="dark"] {
             --bg-primary: #000000;
-            --bg-secondary: rgba(10, 10, 10, 0.7);
-            --bg-tertiary: rgba(26, 26, 26, 0.5);
-            --glass-bg: rgba(20, 20, 20, 0.7);
-            --glass-border: rgba(255, 255, 255, 0.1);
+            --glass-bg: rgba(20, 20, 20, 0.6);
+            --glass-border: rgba(255, 255, 255, 0.08);
             --text-primary: #FFFFFF;
             --text-secondary: #AAAAAA;
             --text-tertiary: #666666;
-            --border-color: rgba(255, 255, 255, 0.1);
             --shadow-sm: 0 4px 16px rgba(0, 0, 0, 0.3);
             --shadow-md: 0 8px 32px rgba(0, 0, 0, 0.4);
             --shadow-lg: 0 16px 48px rgba(0, 0, 0, 0.5);
         }
 
+        /* Clear Glass - прозрачный */
+        [data-glass="clear"] {
+            --glass-bg: rgba(255, 255, 255, 0.4);
+            --glass-border: rgba(0, 0, 0, 0.06);
+            --blur-amount: 30px;
+        }
+
+        [data-theme="dark"][data-glass="clear"] {
+            --glass-bg: rgba(20, 20, 20, 0.4);
+            --glass-border: rgba(255, 255, 255, 0.06);
+        }
+
+        /* Tinted Glass - замутненный с цветом */
         [data-glass="tinted"] {
-            --glass-bg: rgba(0, 184, 212, 0.1);
-            --glass-border: rgba(0, 184, 212, 0.2);
+            --glass-bg: rgba(0, 184, 212, 0.25);
+            --glass-border: rgba(0, 184, 212, 0.3);
+            --blur-amount: 15px;
         }
 
         [data-theme="dark"][data-glass="tinted"] {
-            --glass-bg: rgba(0, 184, 212, 0.15);
-            --glass-border: rgba(0, 184, 212, 0.25);
+            --glass-bg: rgba(0, 184, 212, 0.3);
+            --glass-border: rgba(0, 184, 212, 0.35);
         }
 
         body {
@@ -65,14 +73,6 @@
             transition: background 0.5s cubic-bezier(0.4, 0, 0.2, 1);
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
-        }
-
-        .glass {
-            background: var(--glass-bg);
-            backdrop-filter: blur(var(--blur-amount));
-            -webkit-backdrop-filter: blur(var(--blur-amount));
-            border: 1px solid var(--glass-border);
-            box-shadow: var(--shadow-sm);
         }
 
         .app-container {
@@ -139,17 +139,12 @@
             transform: scale(0.85);
         }
 
-        .icon-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-md);
-        }
-
         .today-section {
             padding: 24px 20px;
             background: var(--glass-bg);
             backdrop-filter: blur(var(--blur-amount));
             -webkit-backdrop-filter: blur(var(--blur-amount));
-            border-bottom: 1px solid var(--glass-border);
+            border: 1px solid var(--glass-border);
             margin: 12px;
             border-radius: 24px;
             box-shadow: var(--shadow-sm);
@@ -189,7 +184,6 @@
             padding: 14px;
             text-align: center;
             box-shadow: var(--shadow-sm);
-            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
 
         .stat-value {
@@ -269,7 +263,6 @@
             transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
             cursor: move;
             position: relative;
-            overflow: hidden;
             -webkit-tap-highlight-color: transparent;
             user-select: none;
             box-shadow: var(--shadow-sm);
@@ -277,12 +270,6 @@
 
         .task-item:active {
             transform: scale(0.98);
-        }
-
-        .task-item.dragging {
-            opacity: 0.6;
-            transform: scale(1.05) rotate(2deg);
-            box-shadow: var(--shadow-lg);
         }
 
         .task-item::before {
@@ -296,10 +283,6 @@
             opacity: 0;
             transition: opacity 0.4s;
             border-radius: 20px 0 0 20px;
-        }
-
-        .task-item:hover::before {
-            opacity: 1;
         }
 
         .drag-handle {
@@ -377,25 +360,17 @@
             font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 0.4px;
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
         }
 
-        .task-tag.today { background: rgba(0, 230, 118, 0.2); color: var(--accent-green); border: 1px solid rgba(0, 230, 118, 0.3); }
+        .task-tag.today { background: rgba(0, 230, 118, 0.2); color: var(--accent-green); }
         .task-tag.mon, .task-tag.tue, .task-tag.wed, .task-tag.thu, .task-tag.fri { 
-            background: rgba(0, 184, 212, 0.2); 
-            color: var(--accent-blue); 
-            border: 1px solid rgba(0, 184, 212, 0.3); 
+            background: rgba(0, 184, 212, 0.2); color: var(--accent-blue);
         }
         .task-tag.sat, .task-tag.sun { 
-            background: rgba(124, 77, 255, 0.2); 
-            color: var(--accent-purple); 
-            border: 1px solid rgba(124, 77, 255, 0.3); 
+            background: rgba(124, 77, 255, 0.2); color: var(--accent-purple);
         }
         .task-tag.daily, .task-tag.weekly, .task-tag.monthly { 
-            background: rgba(0, 230, 118, 0.2); 
-            color: var(--accent-green); 
-            border: 1px solid rgba(0, 230, 118, 0.3); 
+            background: rgba(0, 230, 118, 0.2); color: var(--accent-green);
         }
 
         .delete-btn {
@@ -439,8 +414,8 @@
 
         .cmd-input-wrapper {
             background: var(--glass-bg);
-            backdrop-filter: blur(15px);
-            -webkit-backdrop-filter: blur(15px);
+            backdrop-filter: blur(var(--blur-amount));
+            -webkit-backdrop-filter: blur(var(--blur-amount));
             border: 2px solid var(--glass-border);
             border-radius: 20px;
             padding: 12px 14px;
@@ -471,7 +446,7 @@
             background: transparent;
             border: none;
             outline: none;
-            font-family: -apple-system, BlinkMacSystemFont, 'Google Sans', 'Segoe UI', Roboto;
+            font-family: inherit;
             font-size: 16px;
             color: var(--text-primary);
             min-width: 0;
@@ -501,11 +476,6 @@
 
         .send-btn:active {
             transform: scale(0.85) rotate(45deg);
-        }
-
-        .send-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 24px rgba(0, 184, 212, 0.5);
         }
 
         .modal-overlay {
@@ -604,8 +574,8 @@
 
         .setting-item {
             background: var(--glass-bg);
-            backdrop-filter: blur(15px);
-            -webkit-backdrop-filter: blur(15px);
+            backdrop-filter: blur(var(--blur-amount));
+            -webkit-backdrop-filter: blur(var(--blur-amount));
             border: 1px solid var(--glass-border);
             border-radius: 18px;
             padding: 18px;
@@ -656,8 +626,8 @@
 
         .calendar-container {
             background: var(--glass-bg);
-            backdrop-filter: blur(15px);
-            -webkit-backdrop-filter: blur(15px);
+            backdrop-filter: blur(var(--blur-amount));
+            -webkit-backdrop-filter: blur(var(--blur-amount));
             border: 1px solid var(--glass-border);
             border-radius: 20px;
             padding: 20px;
@@ -773,25 +743,12 @@
         }
 
         @keyframes slideUp {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         .task-item {
             animation: slideUp 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-        }
-
-        @media (max-width: 600px) {
-            .modal-content {
-                max-width: 95%;
-                padding: 24px;
-            }
         }
     </style>
 </head>
@@ -818,15 +775,15 @@
             <div class="productivity-stats">
                 <div class="stat-card">
                     <div class="stat-value" id="statToday">0</div>
-                    <div class="stat-label">Today</div>
+                    <div class="stat-label" id="labelToday">Today</div>
                 </div>
                 <div class="stat-card">
                     <div class="stat-value" id="statWeek">0</div>
-                    <div class="stat-label">Week</div>
+                    <div class="stat-label" id="labelWeek">Week</div>
                 </div>
                 <div class="stat-card">
                     <div class="stat-value" id="statTotal">0</div>
-                    <div class="stat-label">Total</div>
+                    <div class="stat-label" id="labelTotal">Total</div>
                 </div>
             </div>
         </div>
@@ -862,36 +819,36 @@
     <div class="modal-overlay" id="settingsModal">
         <div class="modal-content">
             <div class="modal-header">
-                <div class="modal-title">Settings</div>
+                <div class="modal-title" id="settingsTitle">Settings</div>
                 <div class="close-btn" id="closeSettings">×</div>
             </div>
 
             <div class="settings-group">
-                <div class="settings-group-title">APPEARANCE</div>
+                <div class="settings-group-title" id="appearanceTitle">APPEARANCE</div>
                 
                 <div class="setting-item">
-                    <div class="setting-label">Theme</div>
+                    <div class="setting-label" id="themeLabel">Theme</div>
                     <div class="dual-switch" id="themeSwitch">
-                        <div class="switch-option active" data-theme="light">Light</div>
-                        <div class="switch-option" data-theme="dark">Dark</div>
+                        <div class="switch-option active" data-theme="light" id="themeLightBtn">Light</div>
+                        <div class="switch-option" data-theme="dark" id="themeDarkBtn">Dark</div>
                     </div>
                 </div>
 
                 <div class="setting-item">
-                    <div class="setting-label">Glass Style</div>
+                    <div class="setting-label" id="glassLabel">Glass Style</div>
                     <div class="dual-switch" id="glassSwitch">
-                        <div class="switch-option active" data-glass="clear">Clear</div>
-                        <div class="switch-option" data-glass="tinted">Tinted</div>
+                        <div class="switch-option active" data-glass="clear" id="glassClearBtn">Clear</div>
+                        <div class="switch-option" data-glass="tinted" id="glassTintedBtn">Tinted</div>
                     </div>
                 </div>
             </div>
 
             <div class="settings-group">
-                <div class="settings-group-title">LANGUAGE</div>
+                <div class="settings-group-title" id="languageTitle">LANGUAGE</div>
                 <div class="setting-item">
                     <div class="dual-switch" id="langSwitch">
-                        <div class="switch-option active" data-lang="en">English</div>
-                        <div class="switch-option" data-lang="ru">Русский</div>
+                        <div class="switch-option active" data-lang="en" id="langEnBtn">English</div>
+                        <div class="switch-option" data-lang="ru" id="langRuBtn">Русский</div>
                     </div>
                 </div>
             </div>
@@ -901,7 +858,7 @@
     <div class="modal-overlay" id="calendarModal">
         <div class="modal-content">
             <div class="modal-header">
-                <div class="modal-title">Calendar</div>
+                <div class="modal-title" id="calendarTitle">Calendar</div>
                 <div class="close-btn" id="closeCalendar">×</div>
             </div>
 
@@ -917,7 +874,7 @@
             </div>
 
             <div style="margin-top: 20px; padding: 18px; background: var(--glass-bg); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); border: 1px solid var(--glass-border); border-radius: 18px;">
-                <div style="font-size: 13px; color: var(--text-secondary); margin-bottom: 12px; font-weight: 700; text-transform: uppercase;">Selected Tasks:</div>
+                <div style="font-size: 13px; color: var(--text-secondary); margin-bottom: 12px; font-weight: 700; text-transform: uppercase;" id="selectedLabel">Selected Tasks:</div>
                 <div id="dateTasksList"></div>
             </div>
         </div>
@@ -939,6 +896,51 @@
             ru: ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь']
         };
 
+        const translations = {
+            en: {
+                placeholder: 'Add task...',
+                empty: 'No tasks yet',
+                emptyDesc: 'Start adding below',
+                settings: 'Settings',
+                appearance: 'APPEARANCE',
+                theme: 'Theme',
+                light: 'Light',
+                dark: 'Dark',
+                glassStyle: 'Glass Style',
+                clear: 'Clear',
+                tinted: 'Tinted',
+                language: 'LANGUAGE',
+                calendar: 'Calendar',
+                selected: 'Selected Tasks:',
+                today: 'Today',
+                week: 'Week',
+                total: 'Total',
+                all: 'All',
+                done: 'Done'
+            },
+            ru: {
+                placeholder: 'Добавить задачу...',
+                empty: 'Пока нет задач',
+                emptyDesc: 'Начните добавлять ниже',
+                settings: 'Настройки',
+                appearance: 'ВНЕШНИЙ ВИД',
+                theme: 'Тема',
+                light: 'Светлая',
+                dark: 'Темная',
+                glassStyle: 'Стиль Glass',
+                clear: 'Прозрачный',
+                tinted: 'Тонированный',
+                language: 'ЯЗЫК',
+                calendar: 'Календарь',
+                selected: 'Выбранные задачи:',
+                today: 'Сегодня',
+                week: 'Неделя',
+                total: 'Всего',
+                all: 'Все',
+                done: 'Готово'
+            }
+        };
+
         const currentDay = days[now.getDay()];
         const currentDate = now.getDate();
         const currentMonth = now.getMonth();
@@ -957,26 +959,50 @@
         // Initialize
         document.documentElement.setAttribute('data-theme', currentTheme);
         document.documentElement.setAttribute('data-glass', currentGlass);
+        updateLanguage();
         updateTodaySection();
         renderTasks();
         setupCalendar();
-        initSwitches();
 
-        // Модальные окна
-        document.getElementById('settingsBtn').addEventListener('click', () => {
+        // Universal click handler
+        function handleClick(element, callback) {
+            let touchStarted = false;
+            
+            element.addEventListener('touchstart', (e) => {
+                touchStarted = true;
+            });
+            
+            element.addEventListener('touchend', (e) => {
+                if (touchStarted) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    callback(e);
+                    touchStarted = false;
+                }
+            });
+            
+            element.addEventListener('click', (e) => {
+                if (!touchStarted) {
+                    callback(e);
+                }
+            });
+        }
+
+        // Modal handlers
+        handleClick(document.getElementById('settingsBtn'), () => {
             document.getElementById('settingsModal').classList.add('active');
         });
 
-        document.getElementById('calendarBtn').addEventListener('click', () => {
+        handleClick(document.getElementById('calendarBtn'), () => {
             document.getElementById('calendarModal').classList.add('active');
             renderCalendar();
         });
 
-        document.getElementById('closeSettings').addEventListener('click', () => {
+        handleClick(document.getElementById('closeSettings'), () => {
             document.getElementById('settingsModal').classList.remove('active');
         });
 
-        document.getElementById('closeCalendar').addEventListener('click', () => {
+        handleClick(document.getElementById('closeCalendar'), () => {
             document.getElementById('calendarModal').classList.remove('active');
         });
 
@@ -992,7 +1018,7 @@
             }
         });
 
-        // Команды
+        // Command input
         const cmdInput = document.getElementById('cmdInput');
         const sendBtn = document.getElementById('sendBtn');
 
@@ -1004,7 +1030,7 @@
             }
         }
 
-        sendBtn.addEventListener('click', handleSubmit);
+        handleClick(sendBtn, handleSubmit);
 
         cmdInput.addEventListener('keypress', (e) => {
             if (e.key === 'Enter') {
@@ -1013,69 +1039,44 @@
             }
         });
 
-        // Свитчи
-        function initSwitches() {
-            // Theme
-            document.querySelectorAll('#themeSwitch .switch-option').forEach(opt => {
-                opt.addEventListener('click', function(e) {
-                    e.stopPropagation();
-                    const theme = this.dataset.theme;
-                    document.querySelectorAll('#themeSwitch .switch-option').forEach(o => o.classList.remove('active'));
-                    this.classList.add('active');
-                    currentTheme = theme;
-                    localStorage.setItem('theme', currentTheme);
-                    document.documentElement.setAttribute('data-theme', currentTheme);
-                    tg.setHeaderColor(currentTheme === 'light' ? '#FFFFFF' : '#000000');
-                });
+        // Switches
+        ['themeLightBtn', 'themeDarkBtn'].forEach(id => {
+            handleClick(document.getElementById(id), function() {
+                const theme = this.dataset.theme;
+                document.querySelectorAll('#themeSwitch .switch-option').forEach(o => o.classList.remove('active'));
+                this.classList.add('active');
+                currentTheme = theme;
+                localStorage.setItem('theme', currentTheme);
+                document.documentElement.setAttribute('data-theme', currentTheme);
+                tg.setHeaderColor(currentTheme === 'light' ? '#FFFFFF' : '#000000');
             });
+        });
 
-            // Glass
-            document.querySelectorAll('#glassSwitch .switch-option').forEach(opt => {
-                opt.addEventListener('click', function(e) {
-                    e.stopPropagation();
-                    const glass = this.dataset.glass;
-                    document.querySelectorAll('#glassSwitch .switch-option').forEach(o => o.classList.remove('active'));
-                    this.classList.add('active');
-                    currentGlass = glass;
-                    localStorage.setItem('glass', currentGlass);
-                    document.documentElement.setAttribute('data-glass', currentGlass);
-                });
+        ['glassClearBtn', 'glassTintedBtn'].forEach(id => {
+            handleClick(document.getElementById(id), function() {
+                const glass = this.dataset.glass;
+                document.querySelectorAll('#glassSwitch .switch-option').forEach(o => o.classList.remove('active'));
+                this.classList.add('active');
+                currentGlass = glass;
+                localStorage.setItem('glass', currentGlass);
+                document.documentElement.setAttribute('data-glass', currentGlass);
             });
+        });
 
-            // Lang
-            document.querySelectorAll('#langSwitch .switch-option').forEach(opt => {
-                opt.addEventListener('click', function(e) {
-                    e.stopPropagation();
-                    const lang = this.dataset.lang;
-                    document.querySelectorAll('#langSwitch .switch-option').forEach(o => o.classList.remove('active'));
-                    this.classList.add('active');
-                    currentLang = lang;
-                    localStorage.setItem('lang', currentLang);
-                    updateTodaySection();
-                    renderTasks();
-                });
+        ['langEnBtn', 'langRuBtn'].forEach(id => {
+            handleClick(document.getElementById(id), function() {
+                const lang = this.dataset.lang;
+                document.querySelectorAll('#langSwitch .switch-option').forEach(o => o.classList.remove('active'));
+                this.classList.add('active');
+                currentLang = lang;
+                localStorage.setItem('lang', currentLang);
+                updateLanguage();
             });
+        });
 
-            // Установка активных
-            document.querySelectorAll('#themeSwitch .switch-option').forEach(opt => {
-                if (opt.dataset.theme === currentTheme) opt.classList.add('active');
-                else opt.classList.remove('active');
-            });
-
-            document.querySelectorAll('#glassSwitch .switch-option').forEach(opt => {
-                if (opt.dataset.glass === currentGlass) opt.classList.add('active');
-                else opt.classList.remove('active');
-            });
-
-            document.querySelectorAll('#langSwitch .switch-option').forEach(opt => {
-                if (opt.dataset.lang === currentLang) opt.classList.add('active');
-                else opt.classList.remove('active');
-            });
-        }
-
-        // Фильтры
+        // Filters
         document.querySelectorAll('.filter-chip').forEach(chip => {
-            chip.addEventListener('click', function() {
+            handleClick(chip, function() {
                 document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
                 this.classList.add('active');
                 currentFilter = this.dataset.filter;
@@ -1083,18 +1084,44 @@
             });
         });
 
-        // Календарь
-        document.getElementById('prevMonth').addEventListener('click', (e) => {
-            e.stopPropagation();
+        // Calendar nav
+        handleClick(document.getElementById('prevMonth'), () => {
             calendarDate.setMonth(calendarDate.getMonth() - 1);
             renderCalendar();
         });
 
-        document.getElementById('nextMonth').addEventListener('click', (e) => {
-            e.stopPropagation();
+        handleClick(document.getElementById('nextMonth'), () => {
             calendarDate.setMonth(calendarDate.getMonth() + 1);
             renderCalendar();
         });
+
+        // Update language
+        function updateLanguage() {
+            const t = translations[currentLang];
+            document.getElementById('cmdInput').placeholder = t.placeholder;
+            document.getElementById('settingsTitle').textContent = t.settings;
+            document.getElementById('appearanceTitle').textContent = t.appearance;
+            document.getElementById('themeLabel').textContent = t.theme;
+            document.getElementById('themeLightBtn').textContent = t.light;
+            document.getElementById('themeDarkBtn').textContent = t.dark;
+            document.getElementById('glassLabel').textContent = t.glassStyle;
+            document.getElementById('glassClearBtn').textContent = t.clear;
+            document.getElementById('glassTintedBtn').textContent = t.tinted;
+            document.getElementById('languageTitle').textContent = t.language;
+            document.getElementById('calendarTitle').textContent = t.calendar;
+            document.getElementById('selectedLabel').textContent = t.selected;
+            document.getElementById('labelToday').textContent = t.today;
+            document.getElementById('labelWeek').textContent = t.week;
+            document.getElementById('labelTotal').textContent = t.total;
+            
+            document.querySelectorAll('.filter-chip').forEach((chip, idx) => {
+                const labels = [t.all, t.today, t.week, t.done];
+                chip.textContent = labels[idx];
+            });
+            
+            updateTodaySection();
+            renderTasks();
+        }
 
         function updateTodaySection() {
             document.getElementById('todayDate').textContent = currentDate;
@@ -1134,10 +1161,7 @@
             });
 
             if (taskText.length === 0) return;
-
-            if (taskModules.length === 0) {
-                taskModules.push(currentDay);
-            }
+            if (taskModules.length === 0) taskModules.push(currentDay);
 
             const task = {
                 id: Date.now(),
@@ -1172,13 +1196,14 @@
             }
 
             const container = document.getElementById('tasksList');
+            const t = translations[currentLang];
             
             if (filteredTasks.length === 0) {
                 container.innerHTML = `
                     <div class="empty-state">
                         <div class="empty-icon">✨</div>
-                        <div style="font-size: 18px; font-weight: 600; color: var(--text-secondary); margin-bottom: 8px;">No tasks yet</div>
-                        <div style="font-size: 14px; color: var(--text-tertiary);">Start adding tasks below</div>
+                        <div style="font-size: 18px; font-weight: 600; color: var(--text-secondary); margin-bottom: 8px;">${t.empty}</div>
+                        <div style="font-size: 14px; color: var(--text-tertiary);">${t.emptyDesc}</div>
                     </div>
                 `;
                 return;
@@ -1211,31 +1236,23 @@
         }
 
         function setupDragAndDrop() {
-            const taskItems = document.querySelectorAll('.task-item');
-            
-            taskItems.forEach(item => {
+            document.querySelectorAll('.task-item').forEach(item => {
                 item.addEventListener('dragstart', function(e) {
                     draggedTask = this;
                     this.classList.add('dragging');
-                    e.dataTransfer.effectAllowed = 'move';
                 });
 
                 item.addEventListener('dragend', function() {
                     this.classList.remove('dragging');
                 });
 
-                item.addEventListener('dragover', function(e) {
-                    e.preventDefault();
-                    return false;
-                });
+                item.addEventListener('dragover', (e) => e.preventDefault());
 
                 item.addEventListener('drop', function(e) {
                     e.stopPropagation();
-                    
                     if (draggedTask !== this) {
                         const draggedId = parseInt(draggedTask.dataset.id);
                         const targetId = parseInt(this.dataset.id);
-                        
                         const draggedIndex = tasks.findIndex(t => t.id === draggedId);
                         const targetIndex = tasks.findIndex(t => t.id === targetId);
                         
@@ -1246,8 +1263,6 @@
                             renderTasks();
                         }
                     }
-                    
-                    return false;
                 });
             });
         }
@@ -1262,6 +1277,7 @@
         }
 
         function deleteTask(id) {
+            const t = translations[currentLang];
             if (confirm(currentLang === 'en' ? 'Delete task?' : 'Удалить задачу?')) {
                 tasks = tasks.filter(t => t.id !== id);
                 saveTasks();
@@ -1319,16 +1335,11 @@
                 }
                 
                 const dayName = days[new Date(year, month, i).getDay()];
-                const hasTasks = tasks.some(t => t.modules.includes(dayName));
-                if (hasTasks) {
+                if (tasks.some(t => t.modules.includes(dayName))) {
                     day.classList.add('has-tasks');
                 }
                 
-                day.addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    showDateTasks(year, month, i);
-                });
-                
+                handleClick(day, () => showDateTasks(year, month, i));
                 grid.appendChild(day);
             }
             
@@ -1345,7 +1356,6 @@
         function showDateTasks(year, month, day) {
             const dayName = days[new Date(year, month, day).getDay()];
             const dateTasks = tasks.filter(t => t.modules.includes(dayName) || t.modules.includes('daily'));
-            
             const container = document.getElementById('dateTasksList');
             
             if (dateTasks.length === 0) {
@@ -1358,6 +1368,22 @@
                     ${task.text}
                 </div>
             `).join('');
+        }
+
+        // Set initial active switches
+        if (currentTheme === 'dark') {
+            document.getElementById('themeLightBtn').classList.remove('active');
+            document.getElementById('themeDarkBtn').classList.add('active');
+        }
+        
+        if (currentGlass === 'tinted') {
+            document.getElementById('glassClearBtn').classList.remove('active');
+            document.getElementById('glassTintedBtn').classList.add('active');
+        }
+        
+        if (currentLang === 'ru') {
+            document.getElementById('langEnBtn').classList.remove('active');
+            document.getElementById('langRuBtn').classList.add('active');
         }
     </script>
 </body>
