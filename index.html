@@ -127,7 +127,7 @@
             justify-content: center;
             cursor: pointer;
             font-size: 22px;
-            transition: all 0.3s;
+            transition: transform 0.2s;
             box-shadow: var(--shadow-sm);
             user-select: none;
         }
@@ -221,7 +221,7 @@
             font-weight: 600;
             white-space: nowrap;
             cursor: pointer;
-            transition: all 0.3s;
+            transition: transform 0.2s;
             box-shadow: var(--shadow-sm);
             user-select: none;
         }
@@ -259,7 +259,7 @@
             cursor: pointer;
             flex-shrink: 0;
             margin-top: 2px;
-            transition: all 0.3s;
+            transition: transform 0.2s;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -387,6 +387,10 @@
             color: var(--text-primary);
         }
 
+        .cmd-input::placeholder {
+            color: var(--text-secondary);
+        }
+
         .send-btn {
             width: 40px;
             height: 40px;
@@ -401,10 +405,11 @@
             cursor: pointer;
             box-shadow: 0 4px 16px rgba(0, 184, 212, 0.4);
             user-select: none;
+            transition: transform 0.2s;
         }
 
         .send-btn:active {
-            transform: scale(0.85);
+            transform: scale(0.85) rotate(45deg);
         }
 
         .modal-overlay {
@@ -526,6 +531,7 @@
             cursor: pointer;
             color: var(--text-secondary);
             user-select: none;
+            transition: transform 0.2s;
         }
 
         .switch-option:active {
@@ -592,16 +598,17 @@
         .calendar-grid {
             display: grid;
             grid-template-columns: repeat(7, 1fr);
-            gap: 6px;
+            gap: 4px;
         }
 
         .calendar-day-name {
             text-align: center;
-            font-size: 11px;
+            font-size: 10px;
             color: var(--text-secondary);
-            padding: 10px 0;
+            padding: 8px 0;
             font-weight: 700;
             text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
         .calendar-day {
@@ -609,13 +616,14 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            border-radius: 12px;
-            font-size: 14px;
+            border-radius: 10px;
+            font-size: 13px;
             cursor: pointer;
             position: relative;
             font-weight: 600;
             background: var(--glass-bg);
             user-select: none;
+            min-height: 36px;
         }
 
         .calendar-day:active {
@@ -632,9 +640,9 @@
         .calendar-day.has-tasks::after {
             content: '';
             position: absolute;
-            bottom: 4px;
-            width: 5px;
-            height: 5px;
+            bottom: 3px;
+            width: 4px;
+            height: 4px;
             background: var(--accent-green);
             border-radius: 50%;
         }
@@ -700,8 +708,12 @@
                     class="cmd-input" 
                     id="cmdInput" 
                     placeholder="Add task..."
+                    autocomplete="off"
+                    autocorrect="off"
+                    autocapitalize="off"
+                    spellcheck="false"
                 >
-                <button class="send-btn" id="sendBtn">➤</button>
+                <button class="send-btn" id="sendBtn" type="button">➤</button>
             </div>
         </div>
     </div>
@@ -834,13 +846,27 @@
         document.documentElement.setAttribute('data-theme', currentTheme);
         document.documentElement.setAttribute('data-glass', currentGlass);
 
-        // Simple touch handler
+        // Touch handler
         function addTouch(el, fn) {
+            let touchStartY = 0;
+            let touchEndY = 0;
+            
+            el.addEventListener('touchstart', (e) => {
+                touchStartY = e.touches[0].clientY;
+            }, { passive: true });
+            
             el.addEventListener('touchend', (e) => {
-                e.preventDefault();
+                touchEndY = e.changedTouches[0].clientY;
+                // Only trigger if not scrolling
+                if (Math.abs(touchEndY - touchStartY) < 10) {
+                    e.preventDefault();
+                    fn();
+                }
+            });
+            
+            el.addEventListener('click', (e) => {
                 fn();
             });
-            el.addEventListener('click', fn);
         }
 
         // Modals
@@ -850,7 +876,7 @@
 
         addTouch(document.getElementById('calendarBtn'), () => {
             document.getElementById('calendarModal').classList.add('active');
-            renderCalendar();
+            setTimeout(() => renderCalendar(), 100);
         });
 
         addTouch(document.getElementById('closeSettings'), () => {
@@ -861,49 +887,43 @@
             document.getElementById('calendarModal').classList.remove('active');
         });
 
-        // Send button
-        addTouch(document.getElementById('sendBtn'), () => {
-            const val = document.getElementById('cmdInput').value.trim();
+        // Send button - улучшенная обработка
+        const cmdInput = document.getElementById('cmdInput');
+        const sendBtn = document.getElementById('sendBtn');
+
+        function submitTask() {
+            const val = cmdInput.value.trim();
+            console.log('Submit task:', val); // Debug
             if (val) {
                 handleCommand(val);
-                document.getElementById('cmdInput').value = '';
+                cmdInput.value = '';
+                cmdInput.blur(); // Убираем фокус после отправки
+            }
+        }
+
+        addTouch(sendBtn, submitTask);
+
+        cmdInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                submitTask();
             }
         });
 
-        document.getElementById('cmdInput').addEventListener('keypress', (e) => {
+        // Prevent form submission
+        cmdInput.addEventListener('keypress', (e) => {
             if (e.key === 'Enter') {
-                const val = e.target.value.trim();
-                if (val) {
-                    handleCommand(val);
-                    e.target.value = '';
-                }
+                e.preventDefault();
             }
         });
 
         // Switches
-        addTouch(document.getElementById('themeLight'), function() {
-            switchTheme('light');
-        });
-
-        addTouch(document.getElementById('themeDark'), function() {
-            switchTheme('dark');
-        });
-
-        addTouch(document.getElementById('glassClear'), function() {
-            switchGlass('clear');
-        });
-
-        addTouch(document.getElementById('glassTinted'), function() {
-            switchGlass('tinted');
-        });
-
-        addTouch(document.getElementById('langEn'), function() {
-            switchLang('en');
-        });
-
-        addTouch(document.getElementById('langRu'), function() {
-            switchLang('ru');
-        });
+        addTouch(document.getElementById('themeLight'), () => switchTheme('light'));
+        addTouch(document.getElementById('themeDark'), () => switchTheme('dark'));
+        addTouch(document.getElementById('glassClear'), () => switchGlass('clear'));
+        addTouch(document.getElementById('glassTinted'), () => switchGlass('tinted'));
+        addTouch(document.getElementById('langEn'), () => switchLang('en'));
+        addTouch(document.getElementById('langRu'), () => switchLang('ru'));
 
         function switchTheme(theme) {
             [document.getElementById('themeLight'), document.getElementById('themeDark')].forEach(el => el.classList.remove('active'));
@@ -979,6 +999,7 @@
         }
 
         function handleCommand(cmd) {
+            console.log('handleCommand called with:', cmd); // Debug
             const parts = cmd.split(' ');
             const taskModules = [];
             let taskText = [];
@@ -994,14 +1015,16 @@
             if (taskText.length === 0) return;
             if (taskModules.length === 0) taskModules.push(currentDay);
 
-            tasks.unshift({
+            const newTask = {
                 id: Date.now(),
                 text: taskText.join(' '),
                 modules: taskModules,
                 completed: false,
                 created: new Date().toISOString()
-            });
+            };
 
+            console.log('Adding task:', newTask); // Debug
+            tasks.unshift(newTask);
             localStorage.setItem('tasks', JSON.stringify(tasks));
             renderTasks();
             updateStats();
@@ -1021,9 +1044,10 @@
             }
 
             const container = document.getElementById('tasksList');
+            const t = translations[currentLang];
             
             if (filtered.length === 0) {
-                container.innerHTML = `<div class="empty-state"><div style="font-size: 72px; opacity: 0.4; margin-bottom: 20px;">✨</div><div style="font-size: 18px; font-weight: 600; color: var(--text-secondary);">${translations[currentLang].empty}</div></div>`;
+                container.innerHTML = `<div class="empty-state"><div style="font-size: 72px; opacity: 0.4; margin-bottom: 20px;">✨</div><div style="font-size: 18px; font-weight: 600; color: var(--text-secondary);">${t.empty}</div></div>`;
                 return;
             }
 
@@ -1043,7 +1067,6 @@
                 `;
             }).join('');
 
-            // Add handlers
             container.querySelectorAll('.task-checkbox').forEach(el => {
                 addTouch(el, () => {
                     const task = tasks.find(t => t.id == el.dataset.id);
@@ -1092,8 +1115,8 @@
             grid.innerHTML = '';
             
             const dayNamesShort = currentLang === 'en' 
-                ? ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
-                : ['Вс', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб'];
+                ? ['S', 'M', 'T', 'W', 'T', 'F', 'S']
+                : ['В', 'П', 'В', 'С', 'Ч', 'П', 'С'];
             
             dayNamesShort.forEach(name => {
                 const el = document.createElement('div');
@@ -1136,7 +1159,7 @@
             }
         }
 
-        // Set initial state
+        // Initial state
         if (currentTheme === 'dark') {
             document.getElementById('themeLight').classList.remove('active');
             document.getElementById('themeDark').classList.add('active');
